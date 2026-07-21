@@ -6,11 +6,26 @@
 <script type="module">
   import { test } from "./assert.js";
   import { WS, RT, STD_ID } from "../js/core/constants.js";
+  import { UndoStack } from "../js/core/undo-stack.js";
   const results = [];
   results.push(test("constants IDOK", () => {
     if (STD_ID.IDOK !== 1) throw new Error("IDOK");
     if (RT.DIALOG !== 5) throw new Error("RT.DIALOG");
     if ((WS.CHILD | WS.VISIBLE) === 0) throw new Error("styles");
+  }));
+  results.push(test("UndoStack undo/redo", () => {
+    const stack = new UndoStack(2);
+    let n = 0;
+    const inc = () => {
+      n += 1;
+      stack.push({ label: "inc", undo: () => { n -= 1; }, redo: () => { n += 1; } });
+    };
+    inc(); inc(); inc();
+    if (n !== 3) throw new Error("n");
+    stack.undo(); if (n !== 2) throw new Error("undo1");
+    stack.undo(); if (n !== 1) throw new Error("undo2");
+    if (stack.canUndo) throw new Error("no more undo after trim");
+    stack.redo(); if (n !== 2) throw new Error("redo");
   }));
   document.getElementById("out").textContent =
     results.every(Boolean) ? "ALL PASS" : "SOME FAILED — see console";
