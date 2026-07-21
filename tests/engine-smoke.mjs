@@ -2,7 +2,7 @@
  * Node ESM runner mirroring engine-smoke.html
  */
 import { test } from "./assert.js";
-import { WS, RT, STD_ID, STYLE_NAMES } from "../js/core/constants.js";
+import { WS, RT, STD_ID, STYLE_NAMES, BS, DS, DEFAULT_DIALOG_STYLE } from "../js/core/constants.js";
 import { UndoStack } from "../js/core/undo-stack.js";
 import { IdentifierStore } from "../js/core/identifiers.js";
 import { ProjectModel, defaultControl } from "../js/core/project-model.js";
@@ -10,6 +10,9 @@ import { evalExpr } from "../js/engine/rc-expr.js";
 import { lex } from "../js/engine/rc-lexer.js";
 import { parseRc, applyParseToProject } from "../js/engine/rc-parser.js";
 import { compileRc, compileHeader } from "../js/engine/rc-compiler.js";
+import { packDialog, unpackDialog } from "../js/engine/dlg-template.js";
+import { readRes } from "../js/engine/res-reader.js";
+import { writeRes } from "../js/engine/res-writer.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -214,6 +217,76 @@ results.push(test("parse→project→compileRc→parse round-trip", () => {
   if (String(d2[0].id) !== "IDD_ABOUT") throw new Error("rt id " + d2[0].id);
   if (d2[0].controls.length !== 3) throw new Error("rt ctl " + d2[0].controls.length);
   if (d2[0].className !== "bordlg") throw new Error("rt class");
+}));
+
+results.push(test("pack/unpack dialog round-trip", () => {
+  const dlg = {
+    type: "DIALOG",
+    id: "IDD_ABOUT",
+    x: 20, y: 20, cx: 180, cy: 80,
+    style: DEFAULT_DIALOG_STYLE,
+    exStyle: 0,
+    title: "About",
+    font: { name: "MS Sans Serif", size: 8 },
+    className: "bordlg",
+    menu: null,
+    memoryFlags: [],
+    sourceFile: null,
+    controls: [
+      defaultControl({
+        id: 101,
+        className: "STATIC",
+        text: "Hello",
+        x: 10, y: 10, cx: 100, cy: 12,
+        style: WS.CHILD | WS.VISIBLE,
+      }),
+      defaultControl({
+        id: 1,
+        className: "BUTTON",
+        text: "OK",
+        x: 30, y: 50, cx: 50, cy: 14,
+        style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | BS.DEFPUSHBUTTON,
+      }),
+    ],
+  };
+  const buf = packDialog(dlg, (id) => (typeof id === "number" ? id : null));
+  if (!(buf instanceof ArrayBuffer) || buf.byteLength < 32) throw new Error("pack size " + buf.byteLength);
+  const out = unpackDialog(buf, "IDD_ABOUT");
+  if (out.title !== "About") throw new Error("title " + out.title);
+  if (out.controls.length !== 2) throw new Error("ctl count " + out.controls.length);
+  if (out.className !== "bordlg") throw new Error("class " + out.className);
+  if (out.cx !== 180 || out.cy !== 80) throw new Error("geom");
+  if (out.font?.name !== "MS Sans Serif") throw new Error("font");
+  if (out.controls[1].text !== "OK") throw new Error("btn text " + out.controls[1].text);
+  if ((out.style & DS.SETFONT) === 0) throw new Error("DS_SETFONT missing");
+}));
+
+results.push(test("writeRes/readRes round-trip one dialog", () => {
+  const p = new ProjectModel();
+  p.identifiers.define("IDD_TEST", 200);
+  p.identifiers.define("IDC_OK", 1);
+  const d = p.createDialog("IDD_TEST");
+  d.title = "RoundTrip";
+  d.cx = 120;
+  d.cy = 60;
+  p.addControl(d, defaultControl({
+    id: "IDC_OK",
+    className: "BUTTON",
+    text: "OK",
+    x: 10, y: 20, cx: 40, cy: 14,
+    style: WS.CHILD | WS.VISIBLE | WS.TABSTOP,
+  }));
+  const resBuf = writeRes(p);
+  if (!(resBuf instanceof ArrayBuffer) || resBuf.byteLength < 40) throw new Error("res size");
+  const { resources, errors } = readRes(resBuf);
+  if (errors.length) throw new Error("read errors: " + errors.join("; "));
+  const dlgs = resources.filter((r) => r.type === "DIALOG" || r.type === "DIALOGEX");
+  if (dlgs.length !== 1) throw new Error("dlg count " + dlgs.length + " total " + resources.length);
+  if (dlgs[0].title !== "RoundTrip") throw new Error("title " + dlgs[0].title);
+  if (dlgs[0].controls.length !== 1) throw new Error("controls " + dlgs[0].controls.length);
+  // name may be numeric id from RES
+  const nameOk = String(dlgs[0].id) === "200" || String(dlgs[0].id) === "IDD_TEST";
+  if (!nameOk) throw new Error("id " + dlgs[0].id);
 }));
 
 const pass = results.every(Boolean);
