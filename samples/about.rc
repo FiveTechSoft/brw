@@ -1,3 +1,6 @@
+/* Minimal About dialog used by engine smoke tests (3 controls).
+ * For full BWCC sample see bordlg-demo.rc
+ */
 #include "resource.h"
 
 IDD_ABOUT DIALOG 20, 20, 180, 80
@@ -6,7 +9,7 @@ CAPTION "About"
 FONT 8, "MS Sans Serif"
 CLASS "bordlg"
 BEGIN
-  LTEXT "Borland Resource Workshop", IDC_BLURB, 10, 10, 160, 12
-  PUSHBUTTON "OK", IDC_OK, 30, 55, 50, 14
-  PUSHBUTTON "Cancel", IDC_CANCEL, 100, 55, 50, 14
+    LTEXT "Borland Resource Workshop", IDC_BLURB, 10, 10, 160, 12
+    PUSHBUTTON "OK", IDC_OK, 30, 55, 50, 14
+    PUSHBUTTON "Cancel", IDC_CANCEL, 100, 55, 50, 14
 END

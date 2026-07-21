@@ -3,7 +3,7 @@
  */
 import { lex } from "./rc-lexer.js";
 import { evalExpr, parseNumberLexeme } from "./rc-expr.js";
-import { WS, BS, ES, SS, CBS, LBS, STYLE_NAMES } from "../core/constants.js";
+import { WS, BS, ES, SS, CBS, LBS, DS, STYLE_NAMES } from "../core/constants.js";
 
 const CONTROL_KEYWORDS = new Set([
   "CONTROL", "PUSHBUTTON", "DEFPUSHBUTTON", "EDITTEXT", "LTEXT", "RTEXT", "CTEXT",
@@ -343,7 +343,7 @@ export function parseRc(text, opts = {}) {
         type: kind,
         id: idTok,
         x, y, cx, cy,
-        style: WS.POPUP | WS.CAPTION | WS.SYSMENU | WS.VISIBLE | 0x80 | 0x40, // MODALFRAME|SETFONT defaults later
+        style: 0, // filled by STYLE or defaulted after attributes
         exStyle: 0,
         title: "",
         font: null,
@@ -353,8 +353,6 @@ export function parseRc(text, opts = {}) {
         sourceFile: null,
         controls: [],
       };
-      // Reset to 0 until STYLE seen — classic RC defaults differ; use common shell default if no STYLE
-      dlg.style = 0;
 
       // attributes until BEGIN
       while (pos < tokens.length && !at("BEGIN")) {
@@ -448,8 +446,7 @@ export function parseRc(text, opts = {}) {
       expect("END");
 
       if (dlg.style === 0) {
-        // match project default-ish if STYLE omitted
-        dlg.style = WS.POPUP | WS.CAPTION | WS.SYSMENU | WS.VISIBLE | 0x80 | 0x40;
+        dlg.style = WS.POPUP | WS.CAPTION | WS.SYSMENU | WS.VISIBLE | DS.MODALFRAME | DS.SETFONT;
       }
       resources.push(dlg);
       return dlg;

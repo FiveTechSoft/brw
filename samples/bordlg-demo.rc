@@ -1,0 +1,108 @@
+/* =============================================================================
+ *  BORDLG 3D dialog template — Borland Windows Custom Controls (BWCC)
+ * =============================================================================
+ *  Philosophy (classic Resource Workshop):
+ *    - Visual layout lives here (.RC), not in app source code
+ *    - Numeric/symbolic IDs live in resource.h (#define)
+ *    - CLASS "bordlg" paints the chiseled-steel dialog face (VGA+)
+ *    - BorBtn glyphs follow control ID: IDOK/IDYES=check, IDCANCEL/IDNO=X,
+ *      IDABORT, IDRETRY, IDIGNORE, IDHELP=?, etc.
+ *
+ *  How to use in BRW web (Phase 1):
+ *    1. Open / drop resource.h + this file into the Project Window
+ *    2. Double-click IDD_BORDLG_DEMO → Dialog Editor
+ *    3. Test Dialog to exercise focus (BBN_* logs for BWCC buttons)
+ *
+ *  Memory flags (optional on each resource): LOADONCALL MOVEABLE DISCARDABLE
+ * ============================================================================= */
+
+#include "resource.h"
+
+/* ---------------------------------------------------------------------------
+ *  Full BWCC demo: shade frame, statics, BorCheck, BorRadio, BorBtn row
+ * --------------------------------------------------------------------------- */
+IDD_BORDLG_DEMO DIALOG 40, 30, 240, 148
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
+CAPTION "BWCC / BORDLG Sample"
+FONT 8, "MS Sans Serif"
+CLASS "bordlg"
+BEGIN
+    /* Sunken group shade (BorShade) — holds the main content */
+    CONTROL "", IDC_SHADE_MAIN, "BorShade",
+        WS_CHILD | WS_VISIBLE, 8, 8, 224, 100
+
+    LTEXT "Chiseled steel face via CLASS bordlg.", IDC_STATIC_HINT,
+        16, 16, 208, 10
+
+    LTEXT "Borland 3D controls (BWCC):", -1, 16, 32, 208, 10
+
+    CONTROL "Enable grid", IDC_BOR_CHECK, "BorCheck",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP, 16, 48, 100, 12
+
+    CONTROL "Dialog units", IDC_BOR_RADIO1, "BorRadio",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP, 16, 66, 100, 12
+
+    CONTROL "Screen pixels", IDC_BOR_RADIO2, "BorRadio",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP, 16, 82, 100, 12
+
+    /* Standard glyph buttons — ID selects artwork (not caption text) */
+    CONTROL "", IDOK, "BorBtn",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP, 48, 120, 32, 20
+
+    CONTROL "", IDCANCEL, "BorBtn",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP, 88, 120, 32, 20
+
+    CONTROL "", IDHELP, "BorBtn",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP, 128, 120, 32, 20
+
+    CONTROL "", IDRETRY, "BorBtn",
+        WS_CHILD | WS_VISIBLE | WS_TABSTOP, 168, 120, 32, 20
+END
+
+/* ---------------------------------------------------------------------------
+ *  Options dialog — mix of standard Win controls on a BORDLG surface
+ *  (Useful to test LTEXT, EDIT, CHECKBOX, RADIO, COMBO, LIST, GROUPBOX)
+ * --------------------------------------------------------------------------- */
+IDD_OPTIONS DIALOG 28, 28, 220, 160
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Project Options"
+FONT 8, "MS Sans Serif"
+CLASS "bordlg"
+BEGIN
+    GROUPBOX "Editor", IDC_OPT_GROUP, 8, 8, 120, 72
+    AUTOCHECKBOX "Show grid", IDC_OPT_CHECK_GRID, 16, 24, 100, 12
+    AUTOCHECKBOX "Snap to grid", IDC_OPT_CHECK_SNAP, 16, 40, 100, 12
+    AUTORADIOBUTTON "Dialog units", IDC_OPT_RADIO_DU, 16, 56, 100, 12, WS_GROUP
+    AUTORADIOBUTTON "Screen units", IDC_OPT_RADIO_PX, 16, 70, 100, 12
+
+    LTEXT "Project name:", -1, 140, 12, 70, 10
+    EDITTEXT IDC_OPT_EDIT_NAME, 140, 24, 70, 14, ES_AUTOHSCROLL
+
+    LTEXT "Language:", -1, 140, 44, 70, 10
+    COMBOBOX IDC_OPT_COMBO_LANG, 140, 56, 70, 60, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    LTEXT "Linked files:", -1, 8, 88, 80, 10
+    LISTBOX IDC_OPT_LIST_FILES, 8, 100, 120, 36, LBS_NOTIFY | WS_VSCROLL | WS_TABSTOP | WS_BORDER
+
+    DEFPUSHBUTTON "OK", IDOK, 140, 120, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 140, 140, 50, 14
+END
+
+/* ---------------------------------------------------------------------------
+ *  Minimal opaque stubs — preserved by Phase 1 parser for round-trip.
+ *  Full Menu / String / Accel editors are later phases.
+ * --------------------------------------------------------------------------- */
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New Project\tCtrl+N", 40001
+        MENUITEM "&Open...\tCtrl+O", 40002
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit", 40003
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...", 40010
+    END
+END

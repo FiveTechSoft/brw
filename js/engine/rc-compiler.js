@@ -129,16 +129,10 @@ function emitDialog(dlg) {
     lines.push(`CLASS ${emitString(dlg.className)}`);
   }
   if (dlg.menu != null && dlg.menu !== "") {
-    const m = typeof dlg.menu === "string" && !/^\d+$/.test(dlg.menu)
-      ? dlg.menu
-      : String(dlg.menu);
-    // string menu names quoted
-    if (typeof dlg.menu === "string" && !STYLE_NAMES[dlg.menu] && !/^[A-Za-z_]/.test(dlg.menu)) {
-      lines.push(`MENU ${emitString(dlg.menu)}`);
-    } else if (typeof dlg.menu === "string" && !/^[A-Za-z_]/.test(dlg.menu)) {
+    if (typeof dlg.menu === "string" && !/^[A-Za-z_][A-Za-z0-9_]*$/.test(dlg.menu) && !/^\d+$/.test(dlg.menu)) {
       lines.push(`MENU ${emitString(dlg.menu)}`);
     } else {
-      lines.push(`MENU ${m}`);
+      lines.push(`MENU ${emitId(dlg.menu)}`);
     }
   }
 
@@ -215,10 +209,7 @@ function emitControl(c) {
   }
 
   // Full CONTROL form
-  const classEmit = /^[A-Za-z_][A-Za-z0-9_]*$/.test(String(c.className))
-    ? emitString(c.className)
-    : emitString(c.className);
-  let line = `CONTROL ${emitString(text)}, ${id}, ${classEmit}, ${formatStyle(style)}, ${geom}`;
+  let line = `CONTROL ${emitString(text)}, ${id}, ${emitString(c.className)}, ${formatStyle(style)}, ${geom}`;
   if (c.exStyle) line += `, ${formatStyle(c.exStyle)}`;
   return line;
 }
