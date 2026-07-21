@@ -8,6 +8,7 @@
   import { WS, RT, STD_ID } from "../js/core/constants.js";
   import { UndoStack } from "../js/core/undo-stack.js";
   import { IdentifierStore } from "../js/core/identifiers.js";
+  import { ProjectModel, defaultControl } from "../js/core/project-model.js";
   const results = [];
   results.push(test("constants IDOK", () => {
     if (STD_ID.IDOK !== 1) throw new Error("IDOK");
@@ -40,6 +41,32 @@
     if (ids.getValue("IDC_BAR") !== 101) throw new Error("set");
     const text = ids.toHeaderText();
     if (!text.includes("#define IDC_BAR 101")) throw new Error("header");
+  }));
+  results.push(test("ProjectModel dialog undo", () => {
+    const p = new ProjectModel();
+    const d = p.createDialog();
+    if (p.dialogs().length !== 1) throw new Error("dlg");
+    p.undo.undo();
+    if (p.dialogs().length !== 0) throw new Error("undo new");
+    p.undo.redo();
+    if (p.dialogs().length !== 1) throw new Error("redo");
+  }));
+  results.push(test("ProjectModel rename cascade + control", () => {
+    const p = new ProjectModel();
+    const d = p.createDialog();
+    const ctl = defaultControl({ id: "IDC_BTN", text: "OK" });
+    p.addControl(d, ctl);
+    p.renameIdentifier(d.id, "IDD_RENAMED");
+    if (d.id !== "IDD_RENAMED") throw new Error("dlg id");
+    if (!p.identifiers.getByName("IDD_RENAMED")) throw new Error("id store");
+    if (p.findDialog("IDD_RENAMED") !== d) throw new Error("find");
+    const usage = p.recomputeUsage();
+    if (!usage.get("IDD_RENAMED")?.some((t) => t.startsWith("DIALOG:"))) throw new Error("usage dlg");
+    if (!usage.get("IDC_BTN")?.some((t) => t.includes("CONTROL:"))) throw new Error("usage ctl");
+    p.setIdentifierValue("IDD_RENAMED", 999);
+    if (p.identifiers.getValue("IDD_RENAMED") !== 999) throw new Error("set val");
+    p.undo.undo();
+    if (p.identifiers.getValue("IDD_RENAMED") === 999) throw new Error("undo val");
   }));
   document.getElementById("out").textContent =
     results.every(Boolean) ? "ALL PASS" : "SOME FAILED — see console";
