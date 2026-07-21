@@ -9,19 +9,25 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/) (pre-1.0 = API in
 
 ## [Unreleased]
 
-### Planned (Fase 1 restante)
+### Changed
 
-- Project Window (By Type / By File, filtros, preview)
-- Identifiers Window
-- Dialog Editor visual + paleta BWCC + Test Dialog
-- `DLGTEMPLATE` + lector/escritor `.RES` Win32
-- Save Project (`.rc` + `.h` + `.res`)
-- Persistencia de escritorio (`localStorage`)
+- **Objetivo de producto:** clon web **idéntico** a Resource Workshop (no “inspirado en”).  
+  `ROADMAP.md` reescrito con Definition of Done global, gold standard visual desde captura `workshop.png` (DIALOG editor + Tools/Align + BorBtn + status Absolute Grid), menús clásicos File…Help, y fases orientadas a **parity** hasta 1.0.0.
+
+### Planned (hacia clon idéntico)
+
+- Shell y menús pixel-faithful (Control, Align, Options; SpeedBar modes)
+- Project Window + Identifiers (parity manual)
+- Dialog Editor = escena captura (Tools, Align, Caption, BWCC, status line)
+- `DLGTEMPLATE` + `.RES` + Save Project + desktop `.DSK`
+- Menu / Accel / String / Paint / PE·DLL (fases 2–4)
+- 1.0.0 solo con DoD de parity global
 
 ### Documentation
 
 - Mapeo del manual oficial *Resource Workshop for OS/2 1.5 User’s Guide* (1994)
 - Referencia de dominio UI (Project / Dialog / BWCC / diferidos)
+- Roadmap de clon idéntico + checklist UI desde `workshop.png`
 
 ---
 
