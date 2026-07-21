@@ -7,6 +7,7 @@
   import { test } from "./assert.js";
   import { WS, RT, STD_ID } from "../js/core/constants.js";
   import { UndoStack } from "../js/core/undo-stack.js";
+  import { IdentifierStore } from "../js/core/identifiers.js";
   const results = [];
   results.push(test("constants IDOK", () => {
     if (STD_ID.IDOK !== 1) throw new Error("IDOK");
@@ -26,6 +27,19 @@
     stack.undo(); if (n !== 1) throw new Error("undo2");
     if (stack.canUndo) throw new Error("no more undo after trim");
     stack.redo(); if (n !== 2) throw new Error("redo");
+  }));
+  results.push(test("IdentifierStore define and rename cascade", () => {
+    const ids = new IdentifierStore();
+    ids.define("IDC_FOO", 100, "resource.h");
+    ids.define("IDD_MAIN", 200, "resource.h");
+    if (ids.getValue("IDC_FOO") !== 100) throw new Error("get");
+    ids.rename("IDC_FOO", "IDC_BAR");
+    if (ids.getByName("IDC_FOO")) throw new Error("old");
+    if (ids.getByName("IDC_BAR").value !== 100) throw new Error("new");
+    ids.setValue("IDC_BAR", 101);
+    if (ids.getValue("IDC_BAR") !== 101) throw new Error("set");
+    const text = ids.toHeaderText();
+    if (!text.includes("#define IDC_BAR 101")) throw new Error("header");
   }));
   document.getElementById("out").textContent =
     results.every(Boolean) ? "ALL PASS" : "SOME FAILED — see console";
