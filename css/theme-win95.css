@@ -1,0 +1,11 @@
+/* css/theme-win95.css — expand in Task 5 */
+* { box-sizing: border-box; }
+html, body, #app { margin: 0; height: 100%; overflow: hidden; }
+body {
+  font: 11px "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif;
+  background: #008080;
+  color: #000;
+}
+#menubar, #speedbar { background: #c0c0c0; border-bottom: 1px solid #808080; }
+#desktop { position: absolute; inset: 48px 0 28px 0; background: #008080; }
+#taskstrip { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; background: #c0c0c0; }

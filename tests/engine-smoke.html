@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>BRW Engine Smoke</title></head>
+<body>
+<h1>Engine smoke tests</h1>
+<pre id="out"></pre>
+<script type="module">
+  import { test } from "./assert.js";
+  import { WS, RT, STD_ID } from "../js/core/constants.js";
+  const results = [];
+  results.push(test("constants IDOK", () => {
+    if (STD_ID.IDOK !== 1) throw new Error("IDOK");
+    if (RT.DIALOG !== 5) throw new Error("RT.DIALOG");
+    if ((WS.CHILD | WS.VISIBLE) === 0) throw new Error("styles");
+  }));
+  document.getElementById("out").textContent =
+    results.every(Boolean) ? "ALL PASS" : "SOME FAILED — see console";
+</script>
+</body></html>
