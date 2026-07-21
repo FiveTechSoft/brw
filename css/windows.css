@@ -1,1 +1,134 @@
-/* css/windows.css */
+/* css/windows.css — classic Win95 MDI window chrome */
+
+.mdi-window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--face);
+  border-top: 2px solid var(--highlight);
+  border-left: 2px solid var(--highlight);
+  border-right: 2px solid var(--dkshadow);
+  border-bottom: 2px solid var(--dkshadow);
+  box-shadow: inset -1px -1px 0 var(--shadow), inset 1px 1px 0 var(--face);
+  min-width: 200px;
+  min-height: 120px;
+}
+
+.mdi-window.modal {
+  /* modal flag; overlay can be added later */
+}
+
+.mdi-titlebar {
+  display: flex;
+  align-items: center;
+  background: var(--shadow);
+  color: #c0c0c0;
+  height: 18px;
+  padding: 0 2px;
+  user-select: none;
+  cursor: default;
+  flex: 0 0 auto;
+}
+
+.mdi-window.focused .mdi-titlebar {
+  background: var(--active-caption);
+  color: var(--caption-text);
+}
+
+.mdi-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  padding-left: 2px;
+  line-height: 18px;
+}
+
+.mdi-sysbtns {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.mdi-sysbtns button {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  margin-left: 2px;
+  font-size: 10px;
+  line-height: 12px;
+  background: var(--face);
+  color: #000;
+  border: 1px solid;
+  border-color: var(--highlight) var(--dkshadow) var(--dkshadow) var(--highlight);
+  box-shadow: inset -1px -1px 0 var(--shadow);
+  cursor: default;
+}
+
+.mdi-sysbtns button:active {
+  border-color: var(--dkshadow) var(--highlight) var(--highlight) var(--dkshadow);
+  box-shadow: inset 1px 1px 0 var(--shadow);
+  padding: 1px 0 0 1px;
+}
+
+.mdi-content {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background: var(--face);
+  min-height: 0;
+  border-top: 1px solid var(--shadow);
+}
+
+.mdi-resize {
+  position: absolute;
+  z-index: 5;
+}
+
+.mdi-resize[data-dir="e"] {
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.mdi-resize[data-dir="s"] {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.mdi-resize[data-dir="se"] {
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
+}
+
+.task-btn {
+  margin: 2px;
+  height: 22px;
+  min-width: 80px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--face);
+  border: 1px solid;
+  border-color: var(--highlight) var(--dkshadow) var(--dkshadow) var(--highlight);
+  box-shadow: inset -1px -1px 0 var(--shadow);
+  font: inherit;
+  cursor: default;
+  padding: 0 8px;
+}
+
+.task-btn:active,
+.task-btn.active {
+  border-color: var(--dkshadow) var(--highlight) var(--highlight) var(--dkshadow);
+  box-shadow: inset 1px 1px 0 var(--shadow);
+}
