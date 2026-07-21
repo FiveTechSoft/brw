@@ -9,25 +9,34 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/) (pre-1.0 = API in
 
 ## [Unreleased]
 
+### Added (0.3.0-pre — Dialog + Project + RES)
+
+- Menú clásico: File · Edit · Resource · Control · Align · Options · Window · Help
+- Status bar global (`Ready` + detalle)
+- **Project Window**: By Type/File, filtros, preview, DnD open
+- **Identifiers Window**
+- **Dialog Editor** (`DIALOG : id`): Select, Tab, Group, Order, Test, Duplicate, Undo; move/resize; style dialog
+- Paletas flotantes **Tools** (controles + BWCC) y **Alignment**
+- Status editor: `Modify , Absolute Grid  x: y: cx: cy:  Order: ID:`
+- BWCC: `bordlg` grid, BorBtn glifos, BorCheck/Radio/Shade/Static
+- `DLGTEMPLATE` pack/unpack; Win32 `.RES` read/write (`RT_DIALOG`)
+- Save Project → `resource.h` + `.rc` + `.res` (download)
+- Desktop `localStorage`; carga `samples/about.rc` al arrancar
+- Engine smoke: **19 tests** (incluye RES/DLGTEMPLATE)
+
 ### Changed
 
-- **Objetivo de producto:** clon web **idéntico** a Resource Workshop (no “inspirado en”).  
-  `ROADMAP.md` reescrito con Definition of Done global, gold standard visual desde captura `workshop.png` (DIALOG editor + Tools/Align + BorBtn + status Absolute Grid), menús clásicos File…Help, y fases orientadas a **parity** hasta 1.0.0.
+- Objetivo de producto: clon web **idéntico** (`ROADMAP.md` + gold standard `workshop.png`)
+- Desktop por defecto gris clásico (`#808080`)
 
-### Planned (hacia clon idéntico)
+### Still open (hacia 0.3.0 / 0.4.0)
 
-- Shell y menús pixel-faithful (Control, Align, Options; SpeedBar modes)
-- Project Window + Identifiers (parity manual)
-- Dialog Editor = escena captura (Tools, Align, Caption, BWCC, status line)
-- `DLGTEMPLATE` + `.RES` + Save Project + desktop `.DSK`
-- Menu / Accel / String / Paint / PE·DLL (fases 2–4)
+- Iconos 16×16 Tools idénticos a la captura; SpeedBar modes Off/Popup/H/V
+- Align sobre selección multi del editor (no solo todos los controles)
+- Preferences dialog como en captura
+- Array layout, Draft/Normal modes
+- PE/DLL; Menu/Accel/String/Paint editors
 - 1.0.0 solo con DoD de parity global
-
-### Documentation
-
-- Mapeo del manual oficial *Resource Workshop for OS/2 1.5 User’s Guide* (1994)
-- Referencia de dominio UI (Project / Dialog / BWCC / diferidos)
-- Roadmap de clon idéntico + checklist UI desde `workshop.png`
 
 ---
 

@@ -242,17 +242,17 @@ Screenshot A/B: la escena Preferences + Tools + Align + BorBtn es **indistinguib
 
 | Área | ~% hacia idéntico | Notas |
 |------|-------------------|--------|
-| Motor RC (DIALOG) | 70 % | Falta preprocesador completo, RCDATA hexstring |
-| Modelo de proyecto | 50 % | Core sí; tree/UI no |
-| Shell MDI / tema | 40 % | Base; falta menú y look de captura |
-| Dialog Editor visual | 0–5 % | Pendiente (crítico para gold standard) |
-| BWCC rendering | 0–5 % | Solo samples de script |
-| Project / Identifiers UI | 0 % | |
-| .RES / PE | 0 % | |
+| Motor RC (DIALOG) | 75 % | Preprocesador parcial; RCDATA hexstring pendiente |
+| Modelo de proyecto | 70 % | Core + tree + I/O + RES |
+| Shell MDI / tema | 65 % | Menú clásico + status; refinar iconos speedbar |
+| Dialog Editor visual | 55 % | Select/move/resize, Tools/Align, Test, BWCC base |
+| BWCC rendering | 50 % | bordlg grid + BorBtn/Check/Radio/Shade |
+| Project / Identifiers UI | 60 % | Tree, preview, IDs window |
+| .RES / PE | 40 % | RT_DIALOG R/W; PE pendiente |
 | Menu/Accel/String/Paint | 0 % | |
 
-**Versión actual de ingeniería:** `0.1.0` (fundación).  
-**Siguiente hito de parity visible:** `0.3.0` Dialog Editor = escena `workshop.png`.  
+**Versión actual de ingeniería:** `0.3.0-pre` (Dialog Editor + Project + RES base).  
+**Siguiente hito:** refinar A/B vs `workshop.png` → **0.3.0** parity visual; Save/prefs → **0.4.0**.  
 **Parity producto:** `1.0.0`.
 
 ---
