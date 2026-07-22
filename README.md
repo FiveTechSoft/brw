@@ -1,4 +1,4 @@
-﻿# Borland Resource Workshop (Web)
+﻿# Borland Resources Workshop (Web)
 
 **Clon web idéntico** del clásico **Borland Resource Workshop** (Windows / OS/2 era).  
 100% cliente — HTML5, CSS3, JavaScript ES modules. Sin backend, sin npm obligatorio.
