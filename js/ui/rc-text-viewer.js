@@ -1,4 +1,4 @@
-﻿// js/ui/rc-text-viewer.js — Modal window that displays RC source as read-only text
+// js/ui/rc-text-viewer.js — Modal window that displays RC source as read-only text
 import { compileRc, compileHeader } from "../engine/rc-compiler.js";
 
 /**

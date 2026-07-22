@@ -1,4 +1,4 @@
-﻿// js/ui/preferences-dialog.js — Preferences modal (Undo, SpeedBar, Grid, Backups)
+// js/ui/preferences-dialog.js — Preferences modal (Undo, SpeedBar, Grid, Backups)
 import { saveDesktop } from "../core/app-state.js";
 
 /**

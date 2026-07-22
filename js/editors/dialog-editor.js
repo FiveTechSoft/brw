@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dialog Editor â€” select/move/resize, tools, test mode.
  */
 import { WS, STD_ID } from "../core/constants.js";

@@ -1,4 +1,4 @@
-﻿// js/core/app-state.js — desktop layout persistence
+// js/core/app-state.js — desktop layout persistence
 
 const KEY = "brw.desktop.v1";
 

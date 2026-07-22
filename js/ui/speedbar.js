@@ -1,4 +1,4 @@
-﻿// js/ui/speedbar.js — toolbar with mode support (Off/Popup/Horizontal/Vertical)
+// js/ui/speedbar.js — toolbar with mode support (Off/Popup/Horizontal/Vertical)
 
 /**
  * @param {HTMLElement} host

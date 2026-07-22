@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Property Inspector — view/edit properties of the selected control.
  */
 import { compileHeader } from "../engine/rc-compiler.js";

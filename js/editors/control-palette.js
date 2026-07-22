@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Floating Control Palette (Standard + BWCC).
  */
 import { WS, BS, SS, ES, CBS, LBS } from "../core/constants.js";

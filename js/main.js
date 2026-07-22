@@ -1,4 +1,4 @@
-﻿// js/main.js — Resources Workshop shell (classic menu + Project + Dialog Editor)
+// js/main.js — Resources Workshop shell (classic menu + Project + Dialog Editor)
 import { ProjectModel } from "./core/project-model.js";
 import { saveDesktop, loadDesktop } from "./core/app-state.js";
 import { WindowManager } from "./ui/window-manager.js";
