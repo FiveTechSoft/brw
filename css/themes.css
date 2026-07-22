@@ -217,7 +217,7 @@
 }
 [data-theme="macos"] .menu-top.open,
 [data-theme="macos"] .menu-top:hover {
-  background: #3b7dd8;
+  background: #2b6cb0;
   color: #fff;
 }
 [data-theme="macos"] .menu-dropdown {
@@ -244,7 +244,7 @@
   line-height: 20px;
 }
 [data-theme="macos"] .menu-item:hover {
-  background: #3b7dd8;
+  background: #2b6cb0;
   color: #fff;
 }
 [data-theme="macos"] .menu-item.disabled {
@@ -279,7 +279,7 @@
   --caption-text: #000000;
   --desktop: #7a5dc7;
   --window: #ffffff;
-  --hot-track: #e5f0fb;
+  --hot-track: #deecf9;
   --menu-text: #000000;
   --disabled-text: #a0a0a0;
 }
@@ -450,7 +450,7 @@
 }
 [data-theme="win11"] .menu-top:hover,
 [data-theme="win11"] .menu-top.open {
-  background: #e5f0fb;
+  background: #deecf9;
   color: #000;
 }
 
@@ -476,7 +476,7 @@
   color: #222;
 }
 [data-theme="win11"] .menu-item:hover {
-  background: #e5f0fb;
+  background: #deecf9;
   color: #000;
 }
 [data-theme="win11"] .menu-item.disabled {
@@ -556,8 +556,8 @@
   background: rgba(0,0,0,0.04);
 }
 [data-theme="win11"] .editor-toolbar .tool-btn.active {
-  background: #e5f0fb;
-  border-color: #b0d0f0;
+  background: #deecf9;
+  border-color: #a0c0e0;
 }
 
 /* Win11 — palette */
@@ -575,8 +575,8 @@
   background: rgba(0,0,0,0.04);
 }
 [data-theme="win11"] .palette-btn.active {
-  background: #e5f0fb;
-  border-color: #b0d0f0;
+  background: #deecf9;
+  border-color: #a0c0e0;
 }
 [data-theme="win11"] .palette-section-title {
   font-size: 11px;
@@ -604,7 +604,7 @@
   background: #f5f5f5;
 }
 [data-theme="win11"] .project-node.selected {
-  background: #e5f0fb;
+  background: #deecf9;
 }
 
 /* Win11 — dialog canvas */

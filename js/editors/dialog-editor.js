@@ -601,6 +601,32 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       ev.preventDefault();
       if (project.undo.canRedo) project.undo.redo();
     }
+    // Arrow keys: move selection 1 DLU (10 with Shift)
+    if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(ev.key) && selection.size && tool === "select") {
+      ev.preventDefault();
+      const step = ev.shiftKey ? 10 : 1;
+      const dx = ev.key === "ArrowRight" ? step : ev.key === "ArrowLeft" ? -step : 0;
+      const dy = ev.key === "ArrowDown" ? step : ev.key === "ArrowUp" ? -step : 0;
+      for (const c of selection) {
+        project.moveResizeControl(c, { x: c.x + dx, y: c.y + dy });
+      }
+    }
+    // Ctrl+D: duplicate
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "d") {
+      ev.preventDefault();
+      duplicateSelection();
+    }
+    // Ctrl+A: select all
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "a") {
+      ev.preventDefault();
+      selection = new Set(dialog.controls);
+      repaint();
+    }
+    // Escape: clear selection
+    if (ev.key === "Escape") {
+      selection = new Set();
+      repaint();
+    }
   }
   window.addEventListener("keydown", onKey);
 

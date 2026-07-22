@@ -2,6 +2,7 @@
  * Property Inspector — view/edit properties of the selected control.
  */
 import { compileHeader } from "../engine/rc-compiler.js";
+import { WS, BS, SS, ES } from "../core/constants.js";
 
 /**
  * @param {import("../ui/window-manager.js").WindowManager} wm
@@ -72,7 +73,10 @@ export function openPropertyInspector(wm, project, state) {
     noSel.style.display = "none";
     form.style.display = "";
     fldId.value = String(c.id);
-    fldClass.value = String(c.className);
+    // className dropdown
+    const clsOpt = fldClass.querySelector(\`option[value="\${String(c.className)}"]\`);
+    if (clsOpt) fldClass.value = String(c.className);
+    else fldClass.value = "BUTTON";
     fldText.value = String(c.text);
     fldX.value = String(c.x);
     fldY.value = String(c.y);
@@ -81,6 +85,16 @@ export function openPropertyInspector(wm, project, state) {
     fldStyle.value = "0x" + (c.style >>> 0).toString(16).padStart(8, "0");
     fldExStyle.value = "0x" + (c.exStyle >>> 0).toString(16).padStart(8, "0");
     fldTabIndex.value = String(c.tabIndex ?? 0);
+    // WS checkboxes
+    const wsMap = { VISIBLE: WS.VISIBLE, TABSTOP: WS.TABSTOP, DISABLED: WS.DISABLED, BORDER: WS.BORDER, VSCROLL: WS.VSCROLL, HSCROLL: WS.HSCROLL, GROUP: WS.GROUP };
+    for (const [name, bit] of Object.entries(wsMap)) {
+      const cb = root.querySelector(".pi-ws-" + name);
+      if (cb) cb.checked = (c.style & bit) === bit;
+    }
+    // BS dropdown (low byte)
+    const bsLow = c.style & 0xff;
+    const bsOpt = root.querySelector(\`.pi-bs option[value="\${bsLow}"]\`);
+    if (bsOpt) root.querySelector(".pi-bs").value = String(bsLow);
   }
 
   root.querySelector(".pi-apply").onclick = () => {
@@ -89,18 +103,31 @@ export function openPropertyInspector(wm, project, state) {
     if (!sel || sel.size !== 1 || !dlg) return;
     const c = [...sel][0];
     const id = fldId.value.trim();
-    const cls = fldClass.value.trim();
+    const cls = fldClass.value;
     const text = fldText.value;
     const x = parseInt(fldX.value, 10);
     const y = parseInt(fldY.value, 10);
     const cx = parseInt(fldCx.value, 10);
     const cy = parseInt(fldCy.value, 10);
     const tabIndex = parseInt(fldTabIndex.value, 10);
-    // Style: parse hex or number
-    const style = parseInt(fldStyle.value, 16) || parseInt(fldStyle.value, 10) || 0;
-    const exStyle = parseInt(fldExStyle.value, 16) || parseInt(fldExStyle.value, 10) || 0;
 
     if (!id || !cls) return;
+
+    // Build style from WS checkboxes + BS dropdown + hex field
+    const wsMap = { VISIBLE: WS.VISIBLE, TABSTOP: WS.TABSTOP, DISABLED: WS.DISABLED, BORDER: WS.BORDER, VSCROLL: WS.VSCROLL, HSCROLL: WS.HSCROLL, GROUP: WS.GROUP };
+    let style = WS.CHILD;  // always set
+    for (const [name, bit] of Object.entries(wsMap)) {
+      const cb = root.querySelector(".pi-ws-" + name);
+      if (cb && cb.checked) style |= bit;
+    }
+    // BS low byte from dropdown
+    const bsVal = parseInt(root.querySelector(".pi-bs").value, 10) || 0;
+    style = (style & ~0xff) | bsVal;
+    // Override with hex field if user typed something custom
+    const hexVal = parseInt(fldStyle.value, 16) || parseInt(fldStyle.value, 10);
+    if (hexVal) style = hexVal;
+
+    const exStyle = parseInt(fldExStyle.value, 16) || parseInt(fldExStyle.value, 10) || 0;
 
     // ID rename if changed
     if (id !== String(c.id) && typeof c.id === "string") {
