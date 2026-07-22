@@ -1,5 +1,5 @@
 /**
- * Property Inspector — view/edit properties of the selected control.
+ * Property Inspector â€” view/edit properties of the selected control.
  */
 import { compileHeader } from "../engine/rc-compiler.js";
 import { WS, BS, SS, ES } from "../core/constants.js";
@@ -74,7 +74,7 @@ export function openPropertyInspector(wm, project, state) {
     form.style.display = "";
     fldId.value = String(c.id);
     // className dropdown
-    const clsOpt = fldClass.querySelector(\`option[value="\${String(c.className)}"]\`);
+    const clsOpt = fldClass.querySelector(`option[value="${String(c.className)}"]`);
     if (clsOpt) fldClass.value = String(c.className);
     else fldClass.value = "BUTTON";
     fldText.value = String(c.text);
@@ -93,7 +93,7 @@ export function openPropertyInspector(wm, project, state) {
     }
     // BS dropdown (low byte)
     const bsLow = c.style & 0xff;
-    const bsOpt = root.querySelector(\`.pi-bs option[value="\${bsLow}"]\`);
+    const bsOpt = root.querySelector(`.pi-bs option[value="${bsLow}"]`);
     if (bsOpt) root.querySelector(".pi-bs").value = String(bsLow);
   }
 
