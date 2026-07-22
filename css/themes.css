@@ -198,19 +198,71 @@
   background: rgba(0,0,0,0.1);
 }
 
-/* macOS menubar */
+/* macOS menubar — Apple style */
 [data-theme="macos"] .menubar {
-  background: linear-gradient(180deg, #e8e8e8 0%, #d6d6d6 100%);
-  border-bottom: 1px solid #b0b0b0;
+  background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 100%);
+  border-bottom: 1px solid #b8b8b8;
+  padding: 0 6px;
+  height: 24px;
+  align-items: center;
 }
 [data-theme="macos"] .menu-top {
-  padding: 2px 8px;
+  padding: 1px 12px;
+  margin: 0;
   border-radius: 4px;
-  margin: 1px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  line-height: 22px;
 }
 [data-theme="macos"] .menu-top.open,
 [data-theme="macos"] .menu-top:hover {
-  background: rgba(0,0,0,0.06);
+  background: #3b7dd8;
+  color: #fff;
+}
+[data-theme="macos"] .menu-dropdown {
+  background: rgba(240,240,240,0.97);
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15), 0 0 0 0.5px rgba(0,0,0,0.05);
+  padding: 4px;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 200px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+[data-theme="macos"] .menu-dropdown.submenu {
+  left: 100%;
+  top: -4px;
+}
+[data-theme="macos"] .menu-item {
+  padding: 3px 24px 3px 18px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #222;
+  line-height: 20px;
+}
+[data-theme="macos"] .menu-item:hover {
+  background: #3b7dd8;
+  color: #fff;
+}
+[data-theme="macos"] .menu-item.disabled {
+  color: #999;
+  text-shadow: none;
+}
+[data-theme="macos"] .menu-sep {
+  margin: 4px 12px;
+  border-top: 1px solid #d0d0d0;
+}
+[data-theme="macos"] .menu-item.checked {
+  font-weight: 600;
+}
+[data-theme="macos"] .menu-item.has-submenu {
+  position: relative;
+}
+[data-theme="macos"] .menu-dropdown.submenu.open {
+  display: block;
 }
 
 /* macOS title bar buttons icon hover */
@@ -221,55 +273,142 @@
 [data-theme="win11"] {
   --face: #f3f3f3;
   --highlight: #ffffff;
-  --shadow: #d0d0d0;
-  --dkshadow: #aaaaaa;
+  --shadow: #e0e0e0;
+  --dkshadow: #c0c0c0;
   --active-caption: #ffffff;
   --caption-text: #000000;
   --desktop: #7a5dc7;
   --window: #ffffff;
+  --hot-track: #e5f0fb;
+  --menu-text: #000000;
+  --disabled-text: #a0a0a0;
 }
 
-/* Windows 11 window chrome */
+/* Windows 11 — desktop background */
+[data-theme="win11"] #desktop {
+  background: linear-gradient(135deg, #7a5dc7 0%, #5c3d99 50%, #3d1f6e 100%);
+}
+
+/* Windows 11 — window chrome */
 [data-theme="win11"] .mdi-window {
+  border: 1px solid rgba(0,0,0,0.08);
   border-radius: 8px;
-  border: 1px solid #d0d0d0;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.12);
+  overflow: hidden;
+  background: #fff;
 }
 
 [data-theme="win11"] .mdi-titlebar {
   background: #fff;
   height: 32px;
-  padding: 0 12px;
-  border-radius: 8px 8px 0 0;
+  padding: 0 0 0 16px;
   border-bottom: 1px solid #f0f0f0;
+  color: #000;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+[data-theme="win11"] .mdi-window.focused .mdi-titlebar {
+  background: #fff;
   color: #000;
 }
 
+[data-theme="win11"] .mdi-title {
+  font-weight: 600;
+  font-size: 12px;
+  color: #333;
+  line-height: 32px;
+  padding: 0;
+  order: 0;
+  flex: 1;
+}
+
+[data-theme="win11"] .mdi-sysbtns {
+  display: flex;
+  align-items: stretch;
+  order: 1;
+  height: 32px;
+  margin-right: 0;
+}
+
 [data-theme="win11"] .mdi-sysbtns button {
-  width: 46px;
+  width: 48px;
   height: 32px;
   margin: 0;
+  padding: 0;
   border: none;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  font-size: 10px;
-  color: #666;
+  font-size: 11px;
+  line-height: 32px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s;
+  cursor: default;
 }
 [data-theme="win11"] .mdi-sysbtns button:hover {
-  background: rgba(0,0,0,0.04);
+  background: rgba(0,0,0,0.05);
 }
 [data-theme="win11"] .mdi-sysbtns button:active {
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.1);
   box-shadow: none;
   padding: 0;
+}
+[data-theme="win11"] .mdi-sysbtns button[data-act="close"]:hover {
+  background: #e81123;
+  color: #fff;
+}
+[data-theme="win11"] .mdi-sysbtns button[data-act="close"]:active {
+  background: #bf0f1d;
+  color: #fff;
 }
 
 [data-theme="win11"] .mdi-content {
   border-top: none;
-  border-radius: 0 0 8px 8px;
+  background: var(--face);
 }
 
+[data-theme="win11"] .mdi-resize {
+  display: none;
+}
+
+/* Win11 — taskbar */
+[data-theme="win11"] #taskstrip {
+  background: #f3f3f3;
+  border-top: 1px solid #e0e0e0;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 8px;
+}
+
+[data-theme="win11"] .task-btn {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
+  min-width: 120px;
+  max-width: 180px;
+  height: 32px;
+  margin: 0;
+  padding: 0 12px;
+  font-size: 11px;
+  color: #333;
+  transition: background 0.1s;
+}
+[data-theme="win11"] .task-btn:hover {
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="win11"] .task-btn:active,
+[data-theme="win11"] .task-btn.active {
+  background: rgba(0,0,0,0.08);
+  box-shadow: none;
+}
+
+/* Win11 — win-btn */
 [data-theme="win11"] .win-btn {
   border-radius: 4px;
   border: 1px solid #c0c0c0;
@@ -278,9 +417,215 @@
   min-height: 28px;
   padding: 4px 16px;
   font-size: 12px;
+  color: #222;
+  transition: background 0.1s, border-color 0.1s;
+  cursor: default;
+}
+[data-theme="win11"] .win-btn:hover {
+  border-color: #999;
+  background: #fafafa;
 }
 [data-theme="win11"] .win-btn:active {
   background: #e8e8e8;
+  border-color: #888;
   box-shadow: none;
   padding: 4px 16px;
+}
+
+/* Win11 — menubar */
+[data-theme="win11"] .menubar {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0;
+  height: 30px;
+  align-items: center;
+}
+[data-theme="win11"] .menu-top {
+  padding: 3px 10px;
+  margin: 0 1px;
+  border-radius: 4px;
+  color: #333;
+  font-size: 12px;
+  line-height: 22px;
+}
+[data-theme="win11"] .menu-top:hover,
+[data-theme="win11"] .menu-top.open {
+  background: #e5f0fb;
+  color: #000;
+}
+
+[data-theme="win11"] .menu-dropdown {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  padding: 4px;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+}
+[data-theme="win11"] .menu-dropdown.submenu {
+  left: 100%;
+  top: -4px;
+}
+
+[data-theme="win11"] .menu-item {
+  padding: 4px 20px 4px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #222;
+}
+[data-theme="win11"] .menu-item:hover {
+  background: #e5f0fb;
+  color: #000;
+}
+[data-theme="win11"] .menu-item.disabled {
+  color: #a0a0a0;
+  text-shadow: none;
+}
+[data-theme="win11"] .menu-sep {
+  margin: 4px 8px;
+  border-top: 1px solid #e5e5e5;
+}
+[data-theme="win11"] .menu-item.checked {
+  font-weight: 600;
+}
+[data-theme="win11"] .menu-item.has-submenu {
+  position: relative;
+}
+[data-theme="win11"] .menu-dropdown.submenu.open {
+  display: block;
+}
+
+/* Win11 — speedbar */
+[data-theme="win11"] #speedbar {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 2px 4px;
+}
+[data-theme="win11"] .speedbar-btn {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 2px 6px;
+  transition: background 0.1s;
+}
+[data-theme="win11"] .speedbar-btn:hover {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="win11"] .speedbar-btn:active {
+  background: rgba(0,0,0,0.08);
+}
+[data-theme="win11"] .speedbar-sep {
+  border-left: 1px solid #e0e0e0;
+  width: 0;
+  height: 20px;
+  margin: 0 4px;
+}
+
+/* Win11 — statusbar */
+[data-theme="win11"] #statusbar {
+  background: #f3f3f3;
+  border-top: 1px solid #e0e0e0;
+  padding: 0 12px;
+  font-size: 11px;
+  color: #666;
+  height: 24px;
+  line-height: 24px;
+}
+
+/* Win11 — editor toolbars */
+[data-theme="win11"] .editor-toolbar {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 4px;
+  gap: 4px;
+}
+[data-theme="win11"] .editor-toolbar .tool-btn {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  min-width: unset;
+  min-height: unset;
+  padding: 3px 10px;
+  font-size: 11px;
+  transition: background 0.1s;
+}
+[data-theme="win11"] .editor-toolbar .tool-btn:hover {
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="win11"] .editor-toolbar .tool-btn.active {
+  background: #e5f0fb;
+  border-color: #b0d0f0;
+}
+
+/* Win11 — palette */
+[data-theme="win11"] .palette-btn {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 3px 8px;
+  font-size: 11px;
+  transition: background 0.1s;
+  min-width: unset;
+  min-height: unset;
+}
+[data-theme="win11"] .palette-btn:hover {
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="win11"] .palette-btn.active {
+  background: #e5f0fb;
+  border-color: #b0d0f0;
+}
+[data-theme="win11"] .palette-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 6px 2px;
+  color: #555;
+}
+
+/* Win11 — editor status */
+[data-theme="win11"] .editor-status {
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #666;
+}
+
+/* Win11 — project window tree */
+[data-theme="win11"] .project-tree {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+[data-theme="win11"] .project-node:hover {
+  background: #f5f5f5;
+}
+[data-theme="win11"] .project-node.selected {
+  background: #e5f0fb;
+}
+
+/* Win11 — dialog canvas */
+[data-theme="win11"] .dialog-canvas {
+  background: #fff;
+}
+[data-theme="win11"] .dialog-canvas.bwcc-canvas {
+  background: #fff;
+}
+
+/* Win11 — style dialog inputs */
+[data-theme="win11"] .style-row input[type="text"],
+[data-theme="win11"] .style-row input[type="number"],
+[data-theme="win11"] .style-row select {
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  background: #fff;
+}
+[data-theme="win11"] .style-row label {
+  font-size: 11px;
+  color: #444;
 }
