@@ -15,6 +15,10 @@ import { openPropertyInspector } from "./windows/property-inspector.js";
 import { openStringTableEditor } from "./windows/stringtable-editor.js";
 import { openVersionInfoEditor } from "./windows/versioninfo-editor.js";
 import { openAcceleratorEditor } from "./windows/accelerator-editor.js";
+import { openBitmapEditor } from "./windows/bitmap-editor.js";
+import { openMenuEditor } from "./windows/menu-editor.js";
+import { openIconEditor } from "./windows/icon-editor.js";
+import { openScriptEditor } from "./windows/script-editor.js";
 import { openPreferencesDialog } from "./ui/preferences-dialog.js";
 import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
 import { openRcTextViewer } from "./ui/rc-text-viewer.js";
@@ -85,13 +89,22 @@ function openResource(r) {
   } else if (r.type === "ACCELERATORS") {
     openAcceleratorEditor(wm, project, r);
     setStatus("Ready", `Accelerators : ${r.id}`);
+  } else if (r.type === "BITMAP") {
+    openBitmapEditor(wm, project, r);
+    setStatus("Ready", `BITMAP : ${r.id}`);
+  } else if (r.type === "MENU") {
+    openMenuEditor(wm, project, r);
+    setStatus("Ready", `MENU : ${r.id}`);
+  } else if (r.type === "ICON" || r.type === "CURSOR") {
+    openIconEditor(wm, project, r);
+    setStatus("Ready", `${r.type} : ${r.id}`);
   } else {
-    setStatus("Ready", `${r.type} (not editable in Phase 1)`);
+    openScriptEditor(wm, project, r);
+    setStatus("Ready", `${r.type} (text edit) : ${r.id}`);
   }
 }
 
 async function loadProjectFiles(files) {
-  if (!files?.length) return;
 
   for (const f of files) {
     if (f.text != null) {
@@ -509,6 +522,34 @@ const menuDef = [
         project.resources.push({ type: "ACCELERATORS", id: name, rawText: name + " ACCELERATORS\nBEGIN\nEND\n", memoryFlags: [], sourceFile: null });
         project._emit();
         setStatus("Ready", "Accelerators created: " + name);
+      } },
+      { label: "New Bitmap", action: () => {
+        const nb = project.identifiers.nextId("IDB_");
+        project.identifiers.define(nb.name, nb.value);
+        project.resources.push({ type: "BITMAP", id: nb.name, rawText: nb.name + " BITMAP " + "bitmap.bmp", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Bitmap created: " + nb.name);
+      } },
+      { label: "New Menu", action: () => {
+        const nm = project.identifiers.nextId("IDR_");
+        project.identifiers.define(nm.name, nm.value);
+        project.resources.push({ type: "MENU", id: nm.name, rawText: nm.name + " MENU" + String.fromCharCode(10) + "BEGIN" + String.fromCharCode(10) + "    POPUP " + String.fromCharCode(34) + "&File" + String.fromCharCode(34) + String.fromCharCode(10) + "    BEGIN" + String.fromCharCode(10) + "        MENUITEM " + String.fromCharCode(34) + "&New" + String.fromCharCode(34) + ", IDM_NEW" + String.fromCharCode(10) + "    END" + String.fromCharCode(10) + "END" + String.fromCharCode(10), memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Menu created: " + nm.name);
+      } },
+      { label: "New Icon", action: () => {
+        const ni = project.identifiers.nextId("IDI_");
+        project.identifiers.define(ni.name, ni.value);
+        project.resources.push({ type: "ICON", id: ni.name, rawText: ni.name + " ICON " + "icon.ico", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Icon created: " + ni.name);
+      } },
+      { label: "New Cursor", action: () => {
+        const nc = project.identifiers.nextId("IDC_");
+        project.identifiers.define(nc.name, nc.value);
+        project.resources.push({ type: "CURSOR", id: nc.name, rawText: nc.name + " CURSOR " + "cursor.cur", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Cursor created: " + nc.name);
       } },
       "-",
       { label: "Add to Project...", action: onOpen },

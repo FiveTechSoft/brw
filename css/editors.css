@@ -795,3 +795,296 @@
   text-align: center;
   font-size: 9px;
 }
+/* ——— Bitmap Editor ——— */
+.bitmap-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.bitmap-editor .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.bitmap-editor .editor-toolbar .tool-btn {
+  min-width: 48px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+.bitmap-editor .editor-toolbar .tool-btn.active {
+  background: var(--highlight);
+  color: var(--highlight-text);
+  border-color: var(--shadow);
+}
+.bitmap-colorbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.bitmap-colorbar input[type="color"] {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--shadow);
+  cursor: pointer;
+}
+.bitmap-canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  background: #808080;
+  padding: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.bitmap-canvas {
+  image-rendering: pixelated;
+  border: 1px solid var(--shadow);
+  cursor: crosshair;
+  background: #fff;
+}
+.bitmap-editor .editor-status {
+  padding: 2px 6px;
+  border-top: 1px solid var(--shadow);
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+  color: #000;
+}
+/* ——— Menu Editor ——— */
+.menu-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.menu-editor .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.menu-editor .editor-toolbar .win-btn {
+  min-width: 60px;
+  font-size: 11px;
+}
+.menu-editor-split {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.menu-tree-panel {
+  flex: 1;
+  overflow: auto;
+  border-right: 1px solid var(--shadow);
+  padding: 4px;
+  background: #fff;
+}
+.menu-tree-row {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.menu-tree-row:hover {
+  background: var(--highlight);
+}
+.menu-tree-row.selected {
+  background: var(--highlight);
+  color: var(--highlight-text);
+}
+.menu-tree-icon {
+  font-family: monospace;
+  color: #555;
+  min-width: 24px;
+}
+.menu-tree-label {
+  flex: 1;
+}
+.menu-tree-id {
+  color: #888;
+  font-size: 10px;
+  margin-left: 6px;
+}
+.menu-preview-panel {
+  width: 160px;
+  overflow: auto;
+  border-right: 1px solid var(--shadow);
+  padding: 4px;
+  background: var(--face);
+}
+.menu-preview-label {
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #555;
+}
+.menu-preview-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--shadow);
+}
+.menu-preview-top {
+  padding: 2px 8px;
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+  cursor: default;
+  background: var(--face);
+  border: 1px solid transparent;
+}
+.menu-preview-top:hover {
+  background: var(--highlight);
+  color: var(--highlight-text);
+}
+.menu-props-panel {
+  width: 180px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.menu-props-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--shadow);
+  padding-bottom: 2px;
+}
+.menu-props-panel label {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.menu-props-panel input {
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+  padding: 1px 3px;
+  border: 1px solid var(--shadow);
+  background: #fff;
+}
+/* ——— Icon/Cursor Editor ——— */
+.icon-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.icon-editor .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.icon-editor .editor-toolbar .tool-btn {
+  min-width: 44px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+.icon-editor .editor-toolbar .tool-btn.active {
+  background: var(--highlight);
+  color: var(--highlight-text);
+  border-color: var(--shadow);
+}
+.icon-editor .toolbar-separator {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: var(--shadow);
+  margin: 0 4px;
+  vertical-align: middle;
+}
+.icon-editor .bitmap-colorbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.icon-editor .bitmap-colorbar input[type="color"] {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--shadow);
+  cursor: pointer;
+}
+.icon-transp-label {
+  font-size: 10px;
+  color: #555;
+}
+.icon-hotspot-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+  font-size: 11px;
+}
+.icon-hotspot-bar input {
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.icon-canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  background: #808080;
+  padding: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.icon-canvas {
+  image-rendering: pixelated;
+  border: 1px solid var(--shadow);
+  cursor: crosshair;
+}
+/* ——— Script Editor ——— */
+.script-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--face);
+  font: 11px "MS Sans Serif", Tahoma, sans-serif;
+}
+.script-editor .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--shadow);
+  background: var(--face);
+}
+.script-editor .editor-toolbar .win-btn {
+  min-width: 50px;
+  font-size: 11px;
+}
+.script-textarea {
+  flex: 1;
+  margin: 0;
+  padding: 4px;
+  font: 12px "Consolas", "Courier New", monospace;
+  border: none;
+  border-right: 1px solid var(--shadow);
+  background: #fff;
+  color: #000;
+  resize: none;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 4;
+}
+.script-textarea:focus {
+  outline: none;
+}

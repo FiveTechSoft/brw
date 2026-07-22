@@ -1,133 +1,71 @@
 # Changelog
 
-Todos los cambios notables del proyecto **Borland Resources Workshop (Web)** se documentan aquí.
-
-El formato se inspira en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).  
-Versionado: [Semantic Versioning](https://semver.org/lang/es/) (pre-1.0 = API inestable).
+Todos los cambios notables del proyecto **Borland Resources Workshop (Web)** se documentan aqui.
 
 ---
 
 ## [Unreleased]
 
-### Added (0.3.0-pre — Dialog + Project + RES)
+### Added (0.5.0-pre — Icon/Cursor + Menu + Script Editors)
 
-- Menú clásico: File · Edit · Resource · Control · Align · Options · Window · Help
-- Status bar global (`Ready` + detalle)
-- **Project Window**: By Type/File, filtros, preview, DnD open
-- **Identifiers Window**
-- **Dialog Editor** (`DIALOG : id`): Select, Tab, Group, Order, Test, Duplicate, Undo; move/resize; style dialog
-- Paletas flotantes **Tools** (controles + BWCC) y **Alignment**
-- Status editor: `Modify , Absolute Grid  x: y: cx: cy:  Order: ID:`
-- BWCC: `bordlg` grid, BorBtn glifos, BorCheck/Radio/Shade/Static
-- `DLGTEMPLATE` pack/unpack; Win32 `.RES` read/write (`RT_DIALOG`)
-- Save Project → `resource.h` + `.rc` + `.res` (download)
-- Desktop `localStorage`; carga `samples/about.rc` al arrancar
-- Engine smoke: **19 tests** (incluye RES/DLGTEMPLATE)
-- **Preferences dialog**: Undo levels (1-99 slider), SpeedBar mode (Off/Popup/H/V), Grid snap toggle, Backup option
-- **SpeedBar modes**: Off (oculta), Popup (flotante), Horizontal (barra clásica), Vertical (columna)
-- **Dialog templates**: Borland BWCC, Standard Windows, Empty (menú Resource → New)
-- **Grid snap**: controles se alinean a múltiplos de 2 DU en move/resize (configurable vía Preferences)
-- **Multi-selection alignment**: Align palette opera solo sobre controles seleccionados en el editor
+#### Icon/Cursor Editor
+- **Icon Editor** (ICON/CURSOR): Canvas dual-pane 1:1 + zoom x8
+- Tamanos predefinidos: 16x16, 32x32 con selector de tamano
+- Herramientas: Pen, Eraser, Fill, Picker, Rect, Line
+- Pickers de color FG/BG
+- Hotspot editor para cursores (crosshair visual rojo)
+- Checkerboard transparent background
 
-### Changed
+#### Menu Editor
+- **Menu Editor** (MENU): Editor visual con arbol de items
+- Agregar/popup, menu items, separators
+- Mover arriba/abajo, eliminar items
+- Preview de barra de menu en vivo
+- Panel de propiedades (caption + ID)
+- Regeneracion de texto RC desde el arbol
 
-- Objetivo de producto: clon web **idéntico** (`ROADMAP.md` + gold standard `workshop.png`)
-- Desktop por defecto gris clásico (`#808080`)
+#### Script Editor
+- **Script Editor**: Editor de texto para cualquier recurso opaco
+- Textarea monoespaciado (Consolas) con line numbers
+- Save y Revert al resource.rawText
+- Fallback automatico para tipos no editables visualmente
 
-### Still open (hacia 0.4.0)
+#### Resource Menu - New Items
+- **New Bitmap**: Crea BITMAP con prefijo IDB_
+- **New Menu**: Crea MENU con prefijo IDR_
+- **New Icon**: Crea ICON con prefijo IDI_
+- **New Cursor**: Crea CURSOR con prefijo IDC_
 
-- Iconos 16×16 Tools idénticos a la captura
-- Array layout, Draft/Normal modes
-- PE/DLL; Menu/Accel/String/Paint editors
-- 1.0.0 solo con DoD de parity global
+#### Bitmap Editor
+- Canvas 32x32 con zoom x10, grid overlay
+- Herramientas: Pencil, Eraser, Fill, Picker, Rect, Line
+- Pickers de color FG/BG, flood fill, Bresenham lines
+
+#### Resource Editors (Phase 2)
+- String Table, Version Info, Accelerators editors
+
+#### Context Menus + Align/Size
+- Menu contextual en controles de dialogo
+- Align/Size dialogs (classic Borland layout)
+
+#### Browse Control
+- TWBrowse/TXBrowse/TSBrowse rendering
+
+#### Theme Improvements
+- Win11 Mica/Fluent, button press feedback, theme checked state
+
+#### Layout Persistence
+- wm.onLayoutChange, localStorage, beforeunload
+
+#### Deployment
+- GitHub Actions Pages deploy
 
 ---
 
 ## [0.1.0] — 2026-07-21
 
-Primera entrega técnica en rama `feature/brw-phase1`: **fundación + shell + motor RC**.
-
-### Added
-
-#### Documentación y proceso
-- Prompt maestro de especificación (`prompt-borland-resource-workshop.md`)
-- Design spec Fase 1 (`docs/superpowers/specs/2026-07-21-borland-resource-workshop-design.md`)
-- Plan de implementación en 18 tareas (`docs/superpowers/plans/2026-07-21-borland-resource-workshop.md`)
-- `docs/domain/brw-ui-reference.md` — filosofía y editores clásicos
-- `docs/domain/os2-ug-1.5-mapping.md` — checklist manual OS/2 → web
-- Worktree git aislado (`.worktrees/`, ignorado en `.gitignore`)
-
-#### Scaffold y núcleo de estado
-- SPA `index.html` + CSS tema Win95 (stub ampliable)
-- `js/core/constants.js` — `RT_*`, átomos de control, `WS`/`DS`/`BS`/`ES`/`SS`/`CBS`/`LBS`, `STYLE_NAMES`, IDs estándar
-- `js/core/undo-stack.js` — pila de comandos, límite 1–99 (default 10)
-- `js/core/identifiers.js` — `#define`, rename, `nextId`, `toHeaderText`, `resolve`
-- `js/core/project-model.js` — proyecto, diálogos, controles, mutaciones con undo, rename cascade, usage
-
-#### UI shell
-- `js/ui/window-manager.js` — ventanas MDI (drag, resize, min/max, z-order, task strip)
-- `js/ui/menubar.js` / `speedbar.js` / `desktop.js`
-- `js/main.js` — boot: ProjectModel + menús File/Edit/Resource/Window/Help + ventana Project placeholder
-- Estilos `css/theme-win95.css`, `css/windows.css`
-
-#### Motor de scripts de recursos
-- `js/engine/rc-expr.js` — expresiones constantes (decimal, hex, **octal** con ceros a la izquierda, `| + - * / ( )`, símbolos de estilo)
-- `js/engine/rc-lexer.js` — tokens; elimina `//` y `/* */`
-- `js/engine/rc-parser.js` — `#define`, `#include`, `#ifdef`/`#else`/`#endif` simple; **DIALOG/DIALOGEX** + controles (CONTROL y atajos); bloques opacos (MENU, etc.)
-- `js/engine/rc-compiler.js` — `compileHeader` / `compileRc`; round-trip de diálogos
-
-#### Samples y tests
-- `samples/resource.h`, `samples/about.rc` (About mínimo `CLASS "bordlg"`)
-- `samples/bordlg-demo.rc` — plantilla BWCC + diálogo Options + MENU stub
-- `tests/assert.js`, `tests/engine-smoke.html`, `tests/engine-smoke.mjs`
-- **17 tests Node ESM en verde** (constantes, undo, identifiers, ProjectModel, lexer/expr, parse About, #ifdef, opacos, compiler round-trip)
-
-### Architecture notes
-
-```
-UI (shell) → ProjectModel / Identifiers / Undo → RC engine
-```
-
-Sin dependencias npm; servir con `python -m http.server` (o similar).
-
-### Not included in 0.1.0
-
-- Editores visuales de diálogo / menú / paint
-- Lectura/escritura `.RES` o PE
-- Project tree funcional y Save real (solo stubs de menú)
+Primera entrega tecnica: fundacion + shell + motor RC.
 
 ---
 
-## Historial de commits (0.1.0)
-
-Orden aproximado en `feature/brw-phase1`:
-
-| Commit (mensaje) | Área |
-|------------------|------|
-| docs: design spec + implementation plan | Proceso |
-| chore: ignore .worktrees | Repo |
-| chore: scaffold SPA shell, constants, smoke harness | Scaffold |
-| feat: UndoStack | Core |
-| feat: IdentifierStore | Core |
-| feat: ProjectModel | Core |
-| feat: Win95 theme and MDI WindowManager | UI |
-| feat: menubar and speedbar shell wiring | UI |
-| feat: RC lexer and constant expression evaluator | Engine |
-| feat: RC parser for DIALOG, defines, opaque blocks | Engine |
-| feat: RC compiler and parse→project round-trip | Engine |
-| feat: RC engine polish + BORDLG sample templates | Samples |
-| docs: map OS/2 1.5 User Guide | Docs |
-
----
-
-## Enlaces
-
-- Design: `docs/superpowers/specs/2026-07-21-borland-resource-workshop-design.md`
-- Plan: `docs/superpowers/plans/2026-07-21-borland-resource-workshop.md`
-- Roadmap: `ROADMAP.md`
-
----
-
-## [0.0.0] — 2026-07-21
-
-- Inicio del repositorio con prompt de especificación técnica para clonar Borland Resource Workshop en HTML5/CSS3/JS.
+*Actualizado: 2026-07-22 — Icon/Cursor + Menu + Script editors; Resource menu completo.*
