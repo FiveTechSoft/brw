@@ -611,7 +611,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
 export function openTestDialog(wm, project, dialog) {
   const overlay = document.createElement("div");
   overlay.className = "test-dialog-overlay";
-  overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000";
+  overlay.style.cssText = "position:fixed;inset:0;z-index:10000";
 
   const host = document.createElement("div");
   host.className = "test-dialog-host";
@@ -630,8 +630,37 @@ export function openTestDialog(wm, project, dialog) {
     },
   });
 
+  // Position host initially centered, make it draggable by caption
+  host.style.position = "fixed";
+  host.style.left = "50%";
+  host.style.top = "50%";
+  host.style.transform = "translate(-50%, -50%)";
+  host.style.cursor = "move";
   overlay.appendChild(host);
   document.body.appendChild(overlay);
+
+  // Drag by dialog caption
+  const caption = host.querySelector(".dialog-caption");
+  if (caption) {
+    caption.style.cursor = "move";
+    let dragStart = null, dragOrig = null;
+    caption.addEventListener("mousedown", (ev) => {
+      if (ev.button !== 0) return;
+      dragStart = { x: ev.clientX, y: ev.clientY };
+      dragOrig = { left: host.offsetLeft, top: host.offsetTop };
+      const move = (e) => {
+        host.style.left = (dragOrig.left + e.clientX - dragStart.x) + "px";
+        host.style.top = (dragOrig.top + e.clientY - dragStart.y) + "px";
+        host.style.transform = "none";
+      };
+      const up = () => {
+        window.removeEventListener("mousemove", move);
+        window.removeEventListener("mouseup", up);
+      };
+      window.addEventListener("mousemove", move);
+      window.addEventListener("mouseup", up);
+    });
+  }
 
   function closeTestDialog() {
     overlay.remove();
@@ -644,6 +673,21 @@ export function openTestDialog(wm, project, dialog) {
       el.tabIndex = ctl.tabIndex ?? 0;
       el.classList.add("test-focusable");
       el.addEventListener("click", () => {
+        // Toggle checkboxes / radios
+        const cls = String(ctl.className);
+        if (/BorCheck|CHECKBOX|AUTOCHECKBOX|AUTO3STATE|3STATE/i.test(cls)) {
+          el.classList.toggle("checked");
+        } else if (/BorRadio|RADIOBUTTON|AUTORADIOBUTTON/i.test(cls)) {
+          // Uncheck all radios in the same group, then check this one
+          const group = controlEls;
+          for (const [otherCtl, otherEl] of group) {
+            if (otherCtl !== ctl && /BorRadio|RADIOBUTTON|AUTORADIOBUTTON/i.test(String(otherCtl.className))) {
+              otherEl.classList.remove("checked");
+            }
+          }
+          el.classList.add("checked");
+        }
+        // Handle OK/Cancel close
         const num = project.identifiers.resolve(ctl.id);
         const sid = String(ctl.id);
         if (num === STD_ID.IDOK || num === STD_ID.IDCANCEL || sid === "IDOK" || sid === "IDCANCEL" || sid === "IDC_OK" || sid === "IDC_CANCEL") {
@@ -688,9 +732,7 @@ export function openTestDialog(wm, project, dialog) {
   }
   document.addEventListener("keydown", onKey);
 
-  overlay.addEventListener("mousedown", (ev) => {
-    if (ev.target === overlay) closeTestDialog();
-  });
+
 }
 
 function cssEscape(s) {
