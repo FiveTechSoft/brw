@@ -32,8 +32,8 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
   const win = wm.createWindow({
     id: winId,
     title: `DIALOG : ${dialog.id}`,
-    x: 440,
-    y: Math.max(20, Math.round((window.innerHeight - 460) / 2)),
+    x: 520,
+    y: 20,
     w: 560,
     h: 460,
     onClose: () => {
