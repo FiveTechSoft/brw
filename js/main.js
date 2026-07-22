@@ -12,6 +12,9 @@ import { openDialogEditor } from "./editors/dialog-editor.js";
 import { openControlPalette } from "./editors/control-palette.js";
 import { openAlignPalette } from "./editors/align-palette.js";
 import { openPropertyInspector } from "./windows/property-inspector.js";
+import { openStringTableEditor } from "./windows/stringtable-editor.js";
+import { openVersionInfoEditor } from "./windows/versioninfo-editor.js";
+import { openAcceleratorEditor } from "./windows/accelerator-editor.js";
 import { openPreferencesDialog } from "./ui/preferences-dialog.js";
 import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
 import { openRcTextViewer } from "./ui/rc-text-viewer.js";
@@ -64,6 +67,15 @@ function openResource(r) {
       gridSnap,
     });
     setStatus("Ready", `DIALOG : ${r.id}`);
+  } else if (r.type === "STRINGTABLE") {
+    openStringTableEditor(wm, project, r);
+    setStatus("Ready", `String Table : ${r.id}`);
+  } else if (r.type === "VERSIONINFO") {
+    openVersionInfoEditor(wm, project, r);
+    setStatus("Ready", `Version Info : ${r.id}`);
+  } else if (r.type === "ACCELERATORS") {
+    openAcceleratorEditor(wm, project, r);
+    setStatus("Ready", `Accelerators : ${r.id}`);
   } else {
     setStatus("Ready", `${r.type} (not editable in Phase 1)`);
   }
@@ -434,6 +446,29 @@ const menuDef = [
       { label: "New Empty Dialog", action: () => createDialogFromTemplate(DIALOG_TEMPLATES["empty"]) },
       { label: "New Dialog (BorBtn)", action: onNewDialog },
       { label: "Identifiers...", action: () => openIdentifiersWindow(wm, project) },
+      "-",
+      { label: "New String Table", action: () => {
+        const { name, value } = project.identifiers.nextId("ST_");
+        project.identifiers.define(name, value);
+        project.resources.push({ type: "STRINGTABLE", id: name, rawText: name + " STRINGTABLE\nBEGIN\nEND\n", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "String Table created: " + name);
+      } },
+      { label: "New Version Info", action: () => {
+        const { name, value } = project.identifiers.nextId("VS_");
+        project.identifiers.define(name, value);
+        project.resources.push({ type: "VERSIONINFO", id: name, rawText: name + " VERSIONINFO\n FILEVERSION 1,0,0,0\n PRODUCTVERSION 1,0,0,0\n FILEOS VOS_NT_WINDOWS32\n FILETYPE VFT_APP\nBEGIN\n  BLOCK \"StringFileInfo\"\n  BEGIN\n    BLOCK \"040904E4\"\n    BEGIN\n      VALUE \"CompanyName\", \"My Company\\0\"\n      VALUE \"FileDescription\", \"My App\\0\"\n      VALUE \"FileVersion\", \"1.0.0.0\\0\"\n    END\n  END\n  BLOCK \"VarFileInfo\"\n  BEGIN\n    VALUE \"Translation\", 0x0409 0x04E4\n  END\nEND\n", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Version Info created: " + name);
+      } },
+      { label: "New Accelerators", action: () => {
+        const { name, value } = project.identifiers.nextId("ACC_");
+        project.identifiers.define(name, value);
+        project.resources.push({ type: "ACCELERATORS", id: name, rawText: name + " ACCELERATORS\nBEGIN\nEND\n", memoryFlags: [], sourceFile: null });
+        project._emit();
+        setStatus("Ready", "Accelerators created: " + name);
+      } },
+      "-",
       { label: "Add to Project...", action: onOpen },
     ],
   },
