@@ -674,13 +674,17 @@ export function openTestDialog(wm, project, dialog) {
       el.addEventListener("click", () => {
         // Toggle checkboxes / radios
         const cls = String(ctl.className);
-        if (/BorCheck|CHECKBOX|AUTOCHECKBOX|AUTO3STATE|3STATE/i.test(cls)) {
+        const bsLow = ctl.style & 0xff;
+        const isCheck = /BorCheck/i.test(cls) || (cls.toUpperCase() === "BUTTON" && (bsLow === 2 || bsLow === 3 || bsLow === 5));
+        const isRadio = /BorRadio/i.test(cls) || (cls.toUpperCase() === "BUTTON" && (bsLow === 4 || bsLow === 9));
+        if (isCheck) {
           el.classList.toggle("checked");
-        } else if (/BorRadio|RADIOBUTTON|AUTORADIOBUTTON/i.test(cls)) {
+        } else if (isRadio) {
           // Uncheck all radios in the same group, then check this one
-          const group = controlEls;
-          for (const [otherCtl, otherEl] of group) {
-            if (otherCtl !== ctl && /BorRadio|RADIOBUTTON|AUTORADIOBUTTON/i.test(String(otherCtl.className))) {
+          for (const [otherCtl, otherEl] of controlEls) {
+            const oCls = String(otherCtl.className);
+            const oBs = otherCtl.style & 0xff;
+            if (otherCtl !== ctl && (/BorRadio/i.test(oCls) || (oCls.toUpperCase() === "BUTTON" && (oBs === 4 || oBs === 9)))) {
               otherEl.classList.remove("checked");
             }
           }
