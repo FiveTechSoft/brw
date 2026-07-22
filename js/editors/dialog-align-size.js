@@ -21,7 +21,7 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
   const win = wm.createWindow({
     id: winId,
     title: "Align controls",
-    x: 200, y: 120, w: 340, h: 280,
+    x: 200, y: 120, w: 340, h: 210,
     modal: true,
   });
 
@@ -158,7 +158,7 @@ export function openSizeDialog(wm, selection, dialog, project, repaint) {
   const win = wm.createWindow({
     id: winId,
     title: "Size controls",
-    x: 200, y: 120, w: 340, h: 300,
+    x: 200, y: 120, w: 340, h: 210,
     modal: true,
   });
 

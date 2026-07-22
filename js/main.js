@@ -167,12 +167,13 @@ document.addEventListener("mousedown", (e) => {
 document.addEventListener("mouseup", () => {
   document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
 });
-document.addEventListener("mouseleave", (e) => {
+document.addEventListener("mouseout", (e) => {
   // When mouse leaves any button while pressed, release it
-  if (e.target.classList?.contains("btn-pressed")) {
-    e.target.classList.remove("btn-pressed");
+  const btn = e.target.closest?.(".btn-pressed");
+  if (btn && !btn.contains(e.relatedTarget)) {
+    btn.classList.remove("btn-pressed");
   }
-}, true);
+});
 
 setAppTitle();
   setStatus("Ready", `Loaded ${files.map((x) => x.name).join(", ")}`);
@@ -198,12 +199,13 @@ document.addEventListener("mousedown", (e) => {
 document.addEventListener("mouseup", () => {
   document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
 });
-document.addEventListener("mouseleave", (e) => {
+document.addEventListener("mouseout", (e) => {
   // When mouse leaves any button while pressed, release it
-  if (e.target.classList?.contains("btn-pressed")) {
-    e.target.classList.remove("btn-pressed");
+  const btn = e.target.closest?.(".btn-pressed");
+  if (btn && !btn.contains(e.relatedTarget)) {
+    btn.classList.remove("btn-pressed");
   }
-}, true);
+});
 
 setAppTitle();
   setStatus("Ready", "New project");
@@ -691,12 +693,13 @@ document.addEventListener("mousedown", (e) => {
 document.addEventListener("mouseup", () => {
   document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
 });
-document.addEventListener("mouseleave", (e) => {
+document.addEventListener("mouseout", (e) => {
   // When mouse leaves any button while pressed, release it
-  if (e.target.classList?.contains("btn-pressed")) {
-    e.target.classList.remove("btn-pressed");
+  const btn = e.target.closest?.(".btn-pressed");
+  if (btn && !btn.contains(e.relatedTarget)) {
+    btn.classList.remove("btn-pressed");
   }
-}, true);
+});
 
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
