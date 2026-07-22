@@ -33,6 +33,7 @@ export class WindowManager {
     }
     const root = document.createElement("div");
     root.className = "mdi-window" + (opts.modal ? " modal" : "");
+    const modal = !!opts.modal;
     root.dataset.winId = id;
     root.style.left = (opts.x ?? 40) + "px";
     root.style.top = (opts.y ?? 40) + "px";
@@ -71,6 +72,10 @@ export class WindowManager {
     };
     this.windows.set(id, state);
     this.desktop.appendChild(root);
+    if (modal) {
+      const maxBtn = root.querySelector('[data-act="max"]');
+      if (maxBtn) maxBtn.style.display = "none";
+    }
     this._wire(state);
     this._addTaskButton(state);
 
