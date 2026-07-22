@@ -443,6 +443,14 @@
 .handle-sw { left: -2px; bottom: -2px; cursor: nesw-resize; }
 .handle-w  { left: -2px; top: 50%; margin-top: -2px; cursor: ew-resize; }
 
+.rubber-band {
+  position: absolute;
+  border: 1px dotted #000;
+  background: rgba(0,0,180,0.08);
+  pointer-events: none;
+  z-index: 100;
+}
+
 .ctl-tab-badge,
 .ctl-id-badge {
   position: absolute;

@@ -33,7 +33,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     id: winId,
     title: `DIALOG : ${dialog.id}`,
     x: 440,
-    y: 30,
+    y: 20,
     w: 560,
     h: 460,
     onClose: () => {
@@ -149,7 +149,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       onControlClick: (ctl, ev) => onControlMouseDown(ctl, ev),
     });
 
-    // Canvas background click for place / clear selection
+    // Canvas background: rubber‑band selection or place
     const canvas = canvasWrap.querySelector(".dialog-canvas");
     if (canvas) {
       canvas.addEventListener("mousedown", (ev) => {
@@ -159,10 +159,85 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
           placeControl(place, ev, canvas);
           return;
         }
-        if (tool === "select" && !ev.shiftKey) {
+        if (tool !== "select") return;
+
+        // Start rubber‑band
+        ev.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const startX = ev.clientX - rect.left;
+        const startY = ev.clientY - rect.top;
+        const band = document.createElement("div");
+        band.className = "rubber-band";
+        band.style.left = startX + "px";
+        band.style.top = startY + "px";
+        band.style.width = "0px";
+        band.style.height = "0px";
+        canvas.appendChild(band);
+
+        const shift = ev.shiftKey;
+        if (!shift) {
           selection = new Set();
           repaint();
         }
+        // Re-query canvas after possible repaint (it may have been replaced)
+        const canvas2 = canvasWrap.querySelector(".dialog-canvas");
+        let activeBand = band;
+        if (!canvas2) { activeBand.remove(); return; }
+        // If repaint happened, the old band is gone - create a new one on canvas2
+        if (!shift) {
+          activeBand = document.createElement("div");
+          activeBand.className = "rubber-band";
+          activeBand.style.left = startX + "px";
+          activeBand.style.top = startY + "px";
+          activeBand.style.width = "0px";
+          activeBand.style.height = "0px";
+          canvas2.appendChild(activeBand);
+        }
+        const rect2 = canvas2.getBoundingClientRect();
+
+        const move = (e) => {
+          const cx = e.clientX - rect2.left;
+          const cy = e.clientY - rect2.top;
+          const l = Math.min(startX, cx);
+          const t = Math.min(startY, cy);
+          const w = Math.abs(cx - startX);
+          const h = Math.abs(cy - startY);
+          activeBand.style.left = l + "px";
+          activeBand.style.top = t + "px";
+          activeBand.style.width = w + "px";
+          activeBand.style.height = h + "px";
+        };
+        const up = (e) => {
+          window.removeEventListener("mousemove", move);
+          window.removeEventListener("mouseup", up);
+          activeBand.remove();
+          const cx = e.clientX - rect2.left;
+          const cy = e.clientY - rect2.top;
+          const l = Math.min(startX, cx);
+          const t = Math.min(startY, cy);
+          const r = Math.max(startX, cx);
+          const b2 = Math.max(startY, cy);
+          if (Math.abs(cx - startX) < 3 && Math.abs(cy - startY) < 3) {
+            // Click, not drag — clear selection (already done above)
+            return;
+          }
+          const newSel = new Set(selection);
+          for (const c of dialog.controls) {
+            const el = canvas2.querySelector(`[data-ctl-id="${cssEscape(String(c.id))}"]`);
+            if (!el) continue;
+            const cl = el.offsetLeft;
+            const ct = el.offsetTop;
+            const cr = cl + el.offsetWidth;
+            const cb = ct + el.offsetHeight;
+            if (cl < r && cr > l && ct < b2 && cb > t) {
+              newSel.add(c);
+            }
+          }
+          selection = newSel;
+          repaint();
+        };
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", up);
       });
     }
 
