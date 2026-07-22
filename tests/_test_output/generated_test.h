@@ -1,0 +1,15 @@
+#define IDC_BLUE 22
+#define IDC_CANCEL 2
+#define IDC_COLOR 12
+#define IDC_ENABLE 11
+#define IDC_GREEN 21
+#define IDC_HELP 40
+#define IDC_LOAD 31
+#define IDC_NAME 10
+#define IDC_NOTES1 103
+#define IDC_OK 1
+#define IDC_RED 20
+#define IDC_SAVE 30
+#define IDD_ABOUT_BOX 102
+#define IDD_MAIN 100
+#define IDD_OPTIONS 101
