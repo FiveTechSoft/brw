@@ -1,4 +1,4 @@
-// js/main.js â€” Resources Workshop shell (classic menu + Project + Dialog Editor)
+// js/main.js ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Resources Workshop shell (classic menu + Project + Dialog Editor)
 import { ProjectModel } from "./core/project-model.js";
 import { saveDesktop, loadDesktop } from "./core/app-state.js";
 import { WindowManager } from "./ui/window-manager.js";
@@ -391,6 +391,7 @@ function setTheme(name) {
   document.documentElement.dataset.theme = name;
   localStorage.setItem("brw-theme", name);
   setStatus("Ready", "Theme: " + name);
+  createMenubar(document.getElementById("menubar"), menuDef);
 }
 
 // Apply saved theme on load
@@ -531,9 +532,9 @@ const menuDef = [
       { label: "Alignment", action: () => openAlignPalette(wm, onAlign) },
       "-",
       { label: "Theme", items: [
-        { label: "Classic (Win95)", action: () => setTheme("win95"), checked: currentTheme === "win95" },
-        { label: "macOS", action: () => setTheme("macos"), checked: currentTheme === "macos" },
-        { label: "Windows 11", action: () => setTheme("win11"), checked: currentTheme === "win11" },
+        { label: "Classic (Win95)", action: () => setTheme("win95"), get checked() { return currentTheme === "win95"; } },
+        { label: "macOS", action: () => setTheme("macos"), get checked() { return currentTheme === "macos"; } },
+        { label: "Windows 11", action: () => setTheme("win11"), get checked() { return currentTheme === "win11"; } },
       ]},
     ],
   },
@@ -646,7 +647,6 @@ window.addEventListener("keydown", (ev) => {
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
 console.log("Borland Resources Workshop boot complete");
-
 
 
 
