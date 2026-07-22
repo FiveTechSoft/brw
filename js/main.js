@@ -480,14 +480,14 @@ createMenubar(document.getElementById("menubar"), [
 ]);
 
 const speedbar = createSpeedbar(document.getElementById("speedbar"), [
-  { label: "New", title: "New Project", action: onNewProject },
-  { label: "Open", title: "Open", action: onOpen },
-  { label: "Save", title: "Save Project", action: onSaveProject },
+  { label: "New", icon: "new", title: "New Project", action: onNewProject },
+  { label: "Open", icon: "open", title: "Open", action: onOpen },
+  { label: "Save", icon: "save", title: "Save Project", action: onSaveProject },
   "-",
-  { label: "Undo", title: "Undo", action: onUndo },
-  { label: "Redo", title: "Redo", action: onRedo },
+  { label: "Undo", icon: "undo", title: "Undo", action: onUndo },
+  { label: "Redo", icon: "redo", title: "Redo", action: onRedo },
   "-",
-  { label: "Dialog", title: "New Dialog", action: onNewDialog },
+  { label: "Dialog", icon: "dialog", title: "New Dialog", action: onNewDialog },
   { label: "IDs", title: "Identifiers", action: () => openIdentifiersWindow(wm, project) },
 ], {
   mode: speedBarMode,

@@ -719,3 +719,29 @@
   text-align: center;
   font-weight: bold;
 }
+
+/* SpeedBar icons */
+.speedbar-btn .sb-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  line-height: 0;
+}
+.speedbar-btn .sb-icon svg {
+  display: block;
+}
+.speedbar-btn .sb-label {
+  vertical-align: middle;
+  font-size: 11px;
+}
+.speedbar-vertical .speedbar-btn .sb-icon {
+  display: block;
+  margin: 0 auto 2px auto;
+}
+.speedbar-vertical .speedbar-btn .sb-label {
+  display: block;
+  text-align: center;
+  font-size: 9px;
+}
