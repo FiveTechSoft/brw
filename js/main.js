@@ -1,4 +1,4 @@
-﻿// js/main.js — Resource Workshop shell (classic menu + Project + Dialog Editor)
+﻿// js/main.js — Resources Workshop shell (classic menu + Project + Dialog Editor)
 import { ProjectModel } from "./core/project-model.js";
 import { saveDesktop, loadDesktop } from "./core/app-state.js";
 import { WindowManager } from "./ui/window-manager.js";
@@ -48,7 +48,7 @@ function setStatus(ready, detail = "") {
 
 function setAppTitle() {
   const name = project.name && project.name !== "Untitled" ? project.name : "Untitled";
-  document.title = `Resource Workshop - ${name}`;
+  document.title = `Resources Workshop - ${name}`;
 }
 
 function openResource(r) {
@@ -350,13 +350,13 @@ function onAlign(cmd) {
 function onAbout() {
   const win = wm.createWindow({
     id: "about",
-    title: "About Resource Workshop",
+    title: "About Resources Workshop",
     x: 200, y: 120, w: 360, h: 200,
     modal: true,
   });
   const root = document.createElement("div");
   root.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:16px;text-align:center;gap:4px;";
-  root.innerHTML = "<div style='font-size:16px;font-weight:bold;margin-bottom:8px'>Resource Workshop (Web)</div>" +
+  root.innerHTML = "<div style='font-size:16px;font-weight:bold;margin-bottom:8px'>Resources Workshop (Web)</div>" +
     "<div style='font-size:11px;color:var(--dkshadow)'>Identical-clone target</div>" +
     "<div style='font-size:11px;color:var(--dkshadow)'>Phase 1 &mdash; Dialog Editor</div>" +
     "<div style='margin-top:8px;font-size:11px'>Local-first &middot; HTML5/CSS3/JS</div>" +
@@ -486,7 +486,7 @@ createMenubar(document.getElementById("menubar"), [
   },
   {
     label: "Help",
-    items: [{ label: "About Resource Workshop", action: onAbout }],
+    items: [{ label: "About Resources Workshop", action: onAbout }],
   },
 ]);
 
@@ -590,7 +590,7 @@ window.addEventListener("keydown", (ev) => {
 
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
-console.log("Borland Resource Workshop boot complete");
+console.log("Borland Resources Workshop boot complete");
 
 
 
