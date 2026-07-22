@@ -33,7 +33,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     id: winId,
     title: `DIALOG : ${dialog.id}`,
     x: 440,
-    y: 20,
+    y: Math.max(20, Math.round((window.innerHeight - 460) / 2)),
     w: 560,
     h: 460,
     onClose: () => {
