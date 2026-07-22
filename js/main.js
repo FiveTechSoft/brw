@@ -398,7 +398,7 @@ function onPreferences() {
 }
 
 // -- Menus (classic order) --
-createMenubar(document.getElementById("menubar"), [
+const menuDef = [
   {
     label: "File",
     items: [
