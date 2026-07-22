@@ -1,5 +1,5 @@
 /**
- * Dialog Editor â€” select/move/resize, tools, test mode.
+ * Dialog Editor ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â select/move/resize, tools, test mode.
  */
 import { WS, STD_ID } from "../core/constants.js";
 import { defaultControl } from "../core/project-model.js";
@@ -167,7 +167,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       });
     }
 
-    // Canvas background: rubber‑band selection or place
+    // Canvas background: rubberÃ¢â‚¬â€˜band selection or place
     const canvas = canvasWrap.querySelector(".dialog-canvas");
     if (canvas) {
       canvas.addEventListener("mousedown", (ev) => {
@@ -179,7 +179,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
         }
         if (tool !== "select") return;
 
-        // Start rubber‑band
+        // Start rubberÃ¢â‚¬â€˜band
         ev.preventDefault();
         const rect = canvas.getBoundingClientRect();
         const startX = ev.clientX - rect.left;
@@ -236,7 +236,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
           const r = Math.max(startX, cx);
           const b2 = Math.max(startY, cy);
           if (Math.abs(cx - startX) < 3 && Math.abs(cy - startY) < 3) {
-            // Click, not drag — clear selection (already done above)
+            // Click, not drag Ã¢â‚¬â€ clear selection (already done above)
             return;
           }
           const newSel = new Set(selection);
@@ -437,7 +437,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       }
     }
 
-    // Double-click caption â†’ dialog styles
+    // Double-click caption ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ dialog styles
     const cap = canvasWrap.querySelector(".dialog-caption");
     if (cap) {
       cap.addEventListener("dblclick", () => {
@@ -746,7 +746,7 @@ export function openTestDialog(wm, project, dialog) {
         el.setAttribute("role", "button");
         el.addEventListener("mousedown", () => el.classList.add("btn-pressed"));
         el.addEventListener("mouseup", () => el.classList.remove("btn-pressed"));
-        el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
+        // el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
         el.addEventListener("mouseenter", (e) => { if (e.buttons & 1) el.classList.add("btn-pressed"); });
       } else {
         el.contentEditable = "true";
@@ -755,6 +755,8 @@ export function openTestDialog(wm, project, dialog) {
     }
   }
 
+  // Clean up btn-pressed when mouse released outside the button
+  window.addEventListener("mouseup", () => { canvasWrap.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed")); });
   focusable.sort((a, b) => (a.ctl.tabIndex ?? 0) - (b.ctl.tabIndex ?? 0));
   setTimeout(() => { if (focusable[0]) focusable[0].el.focus(); }, 50);
 
@@ -787,7 +789,5 @@ function cssEscape(s) {
   if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(s);
   return String(s).replace(/"/g, '\\"');
 }
-
-
 
 
