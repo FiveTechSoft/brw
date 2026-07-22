@@ -4,10 +4,10 @@
 
 /**
  * Open the Align dialog.
- * @param {import('../ui/window-manager.js').WindowManager} wm
+ * @param {import("../ui/window-manager.js").WindowManager} wm
  * @param {Set<object>} selection
  * @param {object} dialog
- * @param {import('../core/project-model.js').ProjectModel} project
+ * @param {import("../core/project-model.js").ProjectModel} project
  * @param {()=>void} repaint
  */
 export function openAlignDialog(wm, selection, dialog, project, repaint) {
@@ -24,7 +24,7 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
 
   const root = document.createElement("div");
   root.className = "align-dialog";
-  root.innerHTML = 
+  root.innerHTML = `
     <fieldset>
       <legend>Horizontal</legend>
       <label><input type="radio" name="align-h" value="left" checked /> Align Left Edges</label>
@@ -43,7 +43,7 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
       <button type="button" class="win-btn btn-ok">OK</button>
       <button type="button" class="win-btn btn-cancel">Cancel</button>
     </div>
-  ;
+`;
 
   root.querySelector(".btn-cancel").onclick = () => win.close();
   root.querySelector(".btn-ok").onclick = () => {
@@ -85,10 +85,10 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
 
 /**
  * Open the Size dialog.
- * @param {import('../ui/window-manager.js').WindowManager} wm
+ * @param {import("../ui/window-manager.js").WindowManager} wm
  * @param {Set<object>} selection
  * @param {object} dialog
- * @param {import('../core/project-model.js').ProjectModel} project
+ * @param {import("../core/project-model.js").ProjectModel} project
  * @param {()=>void} repaint
  */
 export function openSizeDialog(wm, selection, dialog, project, repaint) {
@@ -105,7 +105,7 @@ export function openSizeDialog(wm, selection, dialog, project, repaint) {
 
   const root = document.createElement("div");
   root.className = "size-dialog";
-  root.innerHTML = 
+  root.innerHTML = `
     <fieldset>
       <legend>Set size of selected to match first selected</legend>
       <label><input type="radio" name="size-mode" value="width" checked /> Same Width</label>
@@ -116,7 +116,7 @@ export function openSizeDialog(wm, selection, dialog, project, repaint) {
       <button type="button" class="win-btn btn-ok">OK</button>
       <button type="button" class="win-btn btn-cancel">Cancel</button>
     </div>
-  ;
+`;
 
   root.querySelector(".btn-cancel").onclick = () => win.close();
   root.querySelector(".btn-ok").onclick = () => {
