@@ -74,3 +74,40 @@
   min-width: 60px;
   margin-left: 6px;
 }
+/* Size dialog two-panel layout */
+.size-panels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.size-panel {
+  flex: 1;
+  border: 2px groove var(--face, #c0c0c0);
+  padding: 8px 12px;
+}
+.size-panel legend {
+  font-weight: bold;
+  font-size: 11px;
+  padding: 0 4px;
+}
+.size-panel label {
+  display: block;
+  padding: 2px 0;
+  font-size: 11px;
+  cursor: default;
+}
+.size-custom-fields {
+  margin-top: 4px;
+  padding: 4px 0 0 16px;
+  border-top: 1px solid var(--shadow, #808080);
+}
+.size-custom-fields label {
+  display: inline-block;
+  margin-right: 8px;
+}
+.size-custom-fields input[type="number"] {
+  width: 50px;
+  font-size: 11px;
+  padding: 1px 3px;
+  border: 1px solid var(--shadow, #808080);
+}
