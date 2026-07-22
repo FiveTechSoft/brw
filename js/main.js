@@ -1,4 +1,4 @@
-// js/main.js — Resources Workshop shell (classic menu + Project + Dialog Editor)
+// js/main.js â€” Resources Workshop shell (classic menu + Project + Dialog Editor)
 import { ProjectModel } from "./core/project-model.js";
 import { saveDesktop, loadDesktop } from "./core/app-state.js";
 import { WindowManager } from "./ui/window-manager.js";
@@ -541,7 +541,9 @@ const menuDef = [
     label: "Help",
     items: [{ label: "About Resources Workshop", action: onAbout }],
   },
-]);
+];
+
+createMenubar(document.getElementById("menubar"), menuDef);
 
 const speedbar = createSpeedbar(document.getElementById("speedbar"), [
   { label: "New", icon: "new", title: "New Project", action: onNewProject },
