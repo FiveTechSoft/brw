@@ -348,12 +348,23 @@ function onAlign(cmd) {
 }
 
 function onAbout() {
-  alert(
-    "Borland Resource Workshop (Web)\n" +
-    "Identical-clone target - Phase 1 Dialog Editor\n\n" +
-    "Local-first . HTML5/CSS3/JS\n" +
-    "Gold standard: classic RW Dialog Tools / Align / BWCC"
-  );
+  const win = wm.createWindow({
+    id: "about",
+    title: "About Resource Workshop",
+    x: 200, y: 120, w: 360, h: 200,
+    modal: true,
+  });
+  const root = document.createElement("div");
+  root.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:16px;text-align:center;gap:4px;";
+  root.innerHTML = "<div style='font-size:16px;font-weight:bold;margin-bottom:8px'>Resource Workshop (Web)</div>" +
+    "<div style='font-size:11px;color:var(--dkshadow)'>Identical-clone target</div>" +
+    "<div style='font-size:11px;color:var(--dkshadow)'>Phase 1 &mdash; Dialog Editor</div>" +
+    "<div style='margin-top:8px;font-size:11px'>Local-first &middot; HTML5/CSS3/JS</div>" +
+    "<div style='font-size:11px'>Gold standard: classic RW Dialog Tools / Align / BWCC</div>" +
+    "<button type='button' class='win-btn' style='margin-top:12px;min-width:60px'>OK</button>";
+  root.querySelector("button").onclick = () => win.close();
+  win.content.innerHTML = "";
+  win.content.appendChild(root);
 }
 
 function onViewRc() {
