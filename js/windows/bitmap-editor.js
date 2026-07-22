@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Bitmap resource editor with pixel drawing tools and undo/redo.
  * Supports custom canvas sizes, export BMP, flood fill, Bresenham lines.
  */
@@ -20,7 +20,7 @@ export function openBitmapEditor(wm, project, resource) {
     try {
       const dv = new DataView(resource.data);
       // BMP: offset 18 = width, offset 22 = height (can be negative = top-down)
-      if (dv.getUint8(0) === 0x42 && dv.getUint8(1) === 4D) {
+      if (dv.getUint8(0) === 0x42 && dv.getUint8(1) === 0x4D) {
         W = dv.getInt32(18, true);
         const rawH = dv.getInt32(22, true);
         const topDown = rawH < 0;
@@ -100,7 +100,7 @@ export function openBitmapEditor(wm, project, resource) {
   const root = document.createElement("div");
   root.className = "bitmap-editor";
 
-  // ── Toolbar ──
+  // -- Toolbar --
   const toolbar = document.createElement("div");
   toolbar.className = "editor-toolbar";
 
@@ -161,7 +161,7 @@ export function openBitmapEditor(wm, project, resource) {
     status.textContent = W + " x " + H + " pixels";
   }
 
-  // ── Drawing tools ──
+  // -- Drawing tools --
   const tools = [["pencil","Pen"],["eraser","Eraser"],["fill","Fill"],["picker","Picker"],["rect","Rect"],["line","Line"]];
   const toolBtns = {};
   for (const [id, label] of tools) {
@@ -173,7 +173,7 @@ export function openBitmapEditor(wm, project, resource) {
   setTool("pencil");
   for (const [id] of tools) toolBtns[id].onclick = () => setTool(id);
 
-  // ── Colors ──
+  // -- Colors --
   const colorBar = document.createElement("div");
   colorBar.className = "bitmap-colorbar";
   const fgSwatch = document.createElement("input");
@@ -184,7 +184,7 @@ export function openBitmapEditor(wm, project, resource) {
   bgSwatch.addEventListener("input", () => { bgColor = bgSwatch.value; });
   colorBar.append(fgSwatch, bgSwatch);
 
-  // ── Canvas ──
+  // -- Canvas --
   const canvasWrap = document.createElement("div");
   canvasWrap.className = "bitmap-canvas-wrap";
   const canvas = document.createElement("canvas");
@@ -194,7 +194,7 @@ export function openBitmapEditor(wm, project, resource) {
   const ctx = canvas.getContext("2d");
   canvasWrap.appendChild(canvas);
 
-  // ── Status ──
+  // -- Status --
   const status = document.createElement("div");
   status.className = "editor-status";
   status.textContent = W + " x " + H + " pixels";
@@ -288,7 +288,7 @@ export function openBitmapEditor(wm, project, resource) {
     drawing = false; drawStart = null;
   });
 
-  // ── Export BMP ──
+  // -- Export BMP --
   function exportBMP() {
     const rowBytes = Math.ceil((W * 3) / 4) * 4;
     const pixelSize = rowBytes * H;
@@ -322,7 +322,7 @@ export function openBitmapEditor(wm, project, resource) {
     URL.revokeObjectURL(a.href);
   }
 
-  // ── Keyboard shortcuts ──
+  // -- Keyboard shortcuts --
   function onKeyDown(ev) {
     if ((ev.ctrlKey || ev.metaKey) && ev.key === "z" && !ev.shiftKey) { ev.preventDefault(); undo(); }
     if ((ev.ctrlKey || ev.metaKey) && (ev.key === "y" || (ev.key === "z" && ev.shiftKey))) { ev.preventDefault(); redo(); }
