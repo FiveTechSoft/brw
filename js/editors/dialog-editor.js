@@ -631,7 +631,6 @@ export function openTestDialog(wm, project, dialog) {
   host.style.left = "50%";
   host.style.top = "50%";
   host.style.transform = "translate(-50%, -50%)";
-  host.style.cursor = "move";
   host.style.zIndex = "10000";
   document.body.appendChild(host);
 
