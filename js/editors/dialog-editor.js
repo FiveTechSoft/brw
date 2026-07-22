@@ -642,12 +642,16 @@ export function openTestDialog(wm, project, dialog) {
     let dragStart = null, dragOrig = null;
     caption.addEventListener("mousedown", (ev) => {
       if (ev.button !== 0) return;
+      // Fix: remove transform first, then read position to avoid jump
+      const rect = host.getBoundingClientRect();
+      host.style.left = rect.left + "px";
+      host.style.top = rect.top + "px";
+      host.style.transform = "none";
       dragStart = { x: ev.clientX, y: ev.clientY };
-      dragOrig = { left: host.offsetLeft, top: host.offsetTop };
+      dragOrig = { left: rect.left, top: rect.top };
       const move = (e) => {
         host.style.left = (dragOrig.left + e.clientX - dragStart.x) + "px";
         host.style.top = (dragOrig.top + e.clientY - dragStart.y) + "px";
-        host.style.transform = "none";
       };
       const up = () => {
         window.removeEventListener("mousemove", move);
