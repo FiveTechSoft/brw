@@ -1,0 +1,35 @@
+﻿/* css/themes.css — Switchable themes via [data-theme="..."] on <html> */
+:root,
+[data-theme="win95"],
+[data-theme="classic"] {
+  --face: #c0c0c0;
+  --highlight: #ffffff;
+  --shadow: #808080;
+  --dkshadow: #000000;
+  --active-caption: #000080;
+  --caption-text: #ffffff;
+  --desktop: #808080;
+  --window: #ffffff;
+}
+
+[data-theme="macos"] {
+  --face: #ececec;
+  --highlight: #ffffff;
+  --shadow: #b0b0b0;
+  --dkshadow: #888888;
+  --active-caption: #dcdcdc;
+  --caption-text: #000000;
+  --desktop: #87ceeb;
+  --window: #ffffff;
+}
+
+[data-theme="win11"] {
+  --face: #f3f3f3;
+  --highlight: #ffffff;
+  --shadow: #d0d0d0;
+  --dkshadow: #aaaaaa;
+  --active-caption: #ffffff;
+  --caption-text: #000000;
+  --desktop: #7a5dc7;
+  --window: #ffffff;
+}

@@ -27,7 +27,42 @@ export function createMenubar(host, menus) {
       }
       const row = document.createElement("div");
       row.className = "menu-item" + (item.disabled ? " disabled" : "");
+      if (item.checked) row.classList.add("checked");
+      if (item.items) row.classList.add("has-submenu");
       row.textContent = item.label;
+      if (item.checked) {
+        row.textContent = "✓ " + item.label;
+      }
+      if (item.items && !item.disabled) {
+        // Nested submenu
+        const subDrop = document.createElement("div");
+        subDrop.className = "menu-dropdown submenu";
+        for (const sub of item.items) {
+          if (sub === "-") {
+            const sep = document.createElement("div"); sep.className = "menu-sep"; subDrop.appendChild(sep);
+            continue;
+          }
+          const subRow = document.createElement("div");
+          subRow.className = "menu-item" + (sub.disabled ? " disabled" : "");
+          if (sub.checked) subRow.classList.add("checked");
+          if (sub.checked) subRow.textContent = "✓ " + sub.label;
+          else subRow.textContent = sub.label;
+          if (!sub.disabled) {
+            subRow.addEventListener("click", (e) => {
+              e.stopPropagation();
+              host.querySelectorAll(".menu-dropdown.open").forEach((d) => d.classList.remove("open"));
+              host.querySelectorAll(".menu-top.open").forEach((t) => t.classList.remove("open"));
+              sub.action?.();
+            });
+          }
+          subDrop.appendChild(subRow);
+        }
+        row.appendChild(subDrop);
+        row.addEventListener("mouseenter", () => {
+          host.querySelectorAll(".submenu.open").forEach((d) => d.classList.remove("open"));
+          subDrop.classList.add("open");
+        });
+      }
       if (!item.disabled) {
         row.addEventListener("click", (e) => {
           e.stopPropagation();

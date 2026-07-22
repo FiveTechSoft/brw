@@ -220,3 +220,26 @@ body {
   border-left: 1px solid var(--shadow);
   border-right: 1px solid var(--highlight);
 }
+
+
+/* Submenu support in menubar */
+.menu-item.has-submenu {
+  position: relative;
+}
+.menu-dropdown.submenu {
+  position: absolute;
+  left: 100%;
+  top: -4px;
+  display: none;
+  min-width: 160px;
+  background: var(--face);
+  border: 1px solid var(--dkshadow);
+  box-shadow: 2px 2px 0 var(--shadow);
+  z-index: 3000;
+}
+.menu-dropdown.submenu.open {
+  display: block;
+}
+.menu-item.checked {
+  font-weight: bold;
+}

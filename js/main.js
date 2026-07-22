@@ -372,6 +372,18 @@ function onViewRc() {
   setStatus("Ready", "RC Text viewer opened");
 }
 
+let currentTheme = localStorage.getItem("brw-theme") || "win95";
+
+function setTheme(name) {
+  currentTheme = name;
+  document.documentElement.dataset.theme = name;
+  localStorage.setItem("brw-theme", name);
+  setStatus("Ready", "Theme: " + name);
+}
+
+// Apply saved theme on load
+document.documentElement.dataset.theme = currentTheme;
+
 function onPreferences() {
   openPreferencesDialog(wm, project, {
     speedBarMode: speedBarMode,
@@ -482,6 +494,12 @@ createMenubar(document.getElementById("menubar"), [
       { label: "Project", action: () => openProjectWindow(wm, project, hooks) },
       { label: "Tools", action: () => openControlPalette(wm, (def) => { placeDef = def; }) },
       { label: "Alignment", action: () => openAlignPalette(wm, onAlign) },
+      "-",
+      { label: "Theme", items: [
+        { label: "Classic (Win95)", action: () => setTheme("win95"), checked: currentTheme === "win95" },
+        { label: "macOS", action: () => setTheme("macos"), checked: currentTheme === "macos" },
+        { label: "Windows 11", action: () => setTheme("win11"), checked: currentTheme === "win11" },
+      ]},
     ],
   },
   {
