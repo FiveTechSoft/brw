@@ -149,7 +149,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     const placeDef = opts.getPlaceDef?.() || null;
     canvasWrap.style.cursor = placeDef ? "crosshair" : "default";
 
-    renderDialog(canvasWrap, dialog, {
+    const { controlEls } = renderDialog(canvasWrap, dialog, {
       interactive: false,
       selectedIds: selection,
       scale: 1,
@@ -157,8 +157,15 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       project,
       showTabOrder: tool === "tab" || tool === "order",
       showHandles: tool === "select",
-      onControlClick: (ctl, ev) => onControlMouseDown(ctl, ev),
     });
+
+    // Wire mousedown for selection + drag (all tools)
+    for (const [ctl, el] of controlEls) {
+      el.addEventListener("mousedown", (ev) => {
+        ev.stopPropagation();
+        onControlMouseDown(ctl, ev);
+      });
+    }
 
     // Canvas background: rubber‑band selection or place
     const canvas = canvasWrap.querySelector(".dialog-canvas");
@@ -754,6 +761,7 @@ function cssEscape(s) {
   if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(s);
   return String(s).replace(/"/g, '\\"');
 }
+
 
 
 
