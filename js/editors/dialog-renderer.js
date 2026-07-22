@@ -260,6 +260,27 @@ function paintControlContent(el, c, project) {
     return;
   }
 
+  if (upper === "TWBROWSE" || upper === "TXBROWSE" || upper === "TSBROWSE") {
+    el.classList.add("ctl-browse");
+    const headers = ["Column 1", "Column 2", "Column 3"];
+    const rows = [
+      ["Data 1", "Data 2", "Data 3"],
+      ["Data 4", "Data 5", "Data 6"],
+      ["Data 7", "Data 8", "Data 9"],
+    ];
+    el.innerHTML = `
+      <div class="browse-header">
+        ${headers.map((h) => `<span class="browse-col">${h}</span>`).join("")}
+      </div>
+      <div class="browse-body">
+        ${rows.map((r) => `<div class="browse-row">${r.map((c) => `<span class="browse-cell">${c}</span>`).join("")}</div>`).join("")}
+      </div>
+      <div class="browse-scrollbar-v"></div>
+      <div class="browse-scrollbar-h"></div>
+    `;
+    return;
+  }
+
   if (upper === "SCROLLBAR") {
     el.classList.add("ctl-scrollbar");
     return;

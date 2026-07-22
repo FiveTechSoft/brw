@@ -1,4 +1,4 @@
-﻿/* css/editors.css â€” Project tree, dialog canvas, BWCC, palettes */
+/* css/editors.css â€” Project tree, dialog canvas, BWCC, palettes */
 
 /* â€”â€”â€” App status bar â€”â€”â€” */
 #statusbar {
@@ -378,6 +378,56 @@
   background: var(--face);
   border-left: 1px solid var(--shadow);
   font-size: 8px;
+}
+/* Browse control (TWBrowse / TXBrowse / TSBrowse) */
+.ctl-browse {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 2px solid;
+  border-color: var(--shadow) var(--highlight) var(--highlight) var(--shadow);
+  overflow: hidden;
+  font-size: 11px;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+}
+.browse-header {
+  display: flex;
+  background: var(--face);
+  border-bottom: 1px solid var(--shadow);
+  font-weight: bold;
+  flex: 0 0 auto;
+}
+.browse-col {
+  flex: 1;
+  padding: 2px 4px;
+  border-right: 1px solid var(--shadow);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.browse-col:last-child {
+  border-right: none;
+}
+.browse-body {
+  flex: 1;
+  overflow: auto;
+}
+.browse-row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+}
+.browse-row:nth-child(even) {
+  background: #f8f8f8;
+}
+.browse-cell {
+  flex: 1;
+  padding: 1px 4px;
+  border-right: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.browse-cell:last-child {
+  border-right: none;
 }
 .ctl-static-frame {
   border: 1px solid var(--shadow);
