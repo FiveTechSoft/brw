@@ -7,6 +7,7 @@ import { renderDialog, duToPx, pxToDu, fontMetrics } from "./dialog-renderer.js"
 import { openStyleDialog } from "./dialog-styles.js";
 import { openRcTextViewer } from "../ui/rc-text-viewer.js";
 import { openPropertyInspector } from "../windows/property-inspector.js";
+import { showContextMenu } from "../ui/context-menu.js";
 
 /**
  * @param {import('../ui/window-manager.js').WindowManager} wm
@@ -781,7 +782,7 @@ export function openTestDialog(wm, project, dialog) {
         el.setAttribute("role", "button");
         el.addEventListener("mousedown", () => el.classList.add("btn-pressed"));
         el.addEventListener("mouseup", () => el.classList.remove("btn-pressed"));
-        // el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
+        el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
         el.addEventListener("mouseenter", (e) => { if (e.buttons & 1) el.classList.add("btn-pressed"); });
       } else {
         el.contentEditable = "true";
@@ -791,7 +792,7 @@ export function openTestDialog(wm, project, dialog) {
   }
 
   // Clean up btn-pressed when mouse released outside the button
-  window.addEventListener("mouseup", () => { canvasWrap.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed")); });
+  window.addEventListener("mouseup", () => { document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed")); });
   focusable.sort((a, b) => (a.ctl.tabIndex ?? 0) - (b.ctl.tabIndex ?? 0));
   setTimeout(() => { if (focusable[0]) focusable[0].el.focus(); }, 50);
 

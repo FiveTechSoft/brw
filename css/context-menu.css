@@ -1,26 +1,29 @@
-﻿/* Context menu (popup contextual) */
+/* Context menu (popup contextual) */
 .context-menu {
   position: fixed;
   z-index: 99999;
-  background: var(--menu-bg, #c0c0c0);
-  border: 2px solid var(--shadow, #808080);
-  border-top-color: var(--light, #ffffff);
-  border-left-color: var(--light, #ffffff);
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  background: var(--face, #c0c0c0);
+  border: 2px outset var(--face, #c0c0c0);
+  border-top-color: var(--highlight, #ffffff);
+  border-left-color: var(--highlight, #ffffff);
+  border-bottom-color: var(--shadow, #808080);
+  border-right-color: var(--shadow, #808080);
   padding: 2px;
-  min-width: 140px;
+  min-width: 160px;
   font-family: "Segoe UI", "Tahoma", sans-serif;
   font-size: 11px;
+  box-shadow: none;
 }
 .context-menu-item {
-  padding: 3px 16px;
+  padding: 3px 24px 3px 8px;
   cursor: default;
   color: var(--menu-text, #000);
   white-space: nowrap;
+  position: relative;
 }
-.context-menu-item:hover {
-  background: var(--highlight, #000080);
-  color: var(--highlight-text, #ffffff);
+.context-menu-item:hover:not(.disabled) {
+  background: var(--active-caption, #000080);
+  color: var(--caption-text, #ffffff);
 }
 .context-menu-item.disabled {
   color: var(--shadow, #808080);
@@ -28,6 +31,12 @@
 .context-menu-item.disabled:hover {
   background: transparent;
   color: var(--shadow, #808080);
+}
+.context-menu-shortcut {
+  float: right;
+  margin-left: 24px;
+  color: inherit;
+  opacity: 0.7;
 }
 .context-menu-sep {
   height: 1px;

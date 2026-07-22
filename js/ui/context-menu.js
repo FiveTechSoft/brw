@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Context menu utility — show/popup a classic Win95-style context menu.
  */
 
@@ -27,7 +27,16 @@ export function showContextMenu(items, x, y, anchor) {
     }
     const row = document.createElement("div");
     row.className = "context-menu-item" + (item.disabled ? " disabled" : "");
-    row.textContent = item.label || "";
+    const parts = (item.label || "").split("\t");
+    const lbl = document.createElement("span");
+    lbl.textContent = parts[0];
+    row.appendChild(lbl);
+    if (parts[1]) {
+      const sc = document.createElement("span");
+      sc.className = "context-menu-shortcut";
+      sc.textContent = parts[1];
+      row.appendChild(sc);
+    }
     if (!item.disabled && item.action) {
       row.addEventListener("click", (e) => {
         e.stopPropagation();
