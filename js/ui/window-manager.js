@@ -189,7 +189,7 @@ export class WindowManager {
         window.removeEventListener("mouseup", up);
       };
       window.addEventListener("mousemove", move);
-      window.addEventListener("mouseup", up);
+      window.addEventListener("mouseup", up); this.onLayoutChange?.();
     });
 
     bar.addEventListener("dblclick", () => this._toggleMax(state));
@@ -223,7 +223,7 @@ export class WindowManager {
           window.removeEventListener("mouseup", up);
         };
         window.addEventListener("mousemove", move);
-        window.addEventListener("mouseup", up);
+        window.addEventListener("mouseup", up); this.onLayoutChange?.();
       });
     }
   }

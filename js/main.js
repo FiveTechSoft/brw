@@ -26,6 +26,15 @@ import { WS, BS } from "./core/constants.js";
 const project = new ProjectModel();
 const desktopEl = setupDesktop(document.getElementById("desktop"));
 const wm = new WindowManager(desktopEl, document.getElementById("taskstrip"));
+wm.onLayoutChange = () => saveDesktop({
+  windows: wm.getLayout(),
+  undoLimit: project.undo.limit,
+  unitMode,
+  sortMode: project.sortMode,
+  filters: { ...project.filters },
+  speedBarMode,
+  gridSnap,
+});
 
 /** @type {object|null} */
 let placeDef = null;
