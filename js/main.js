@@ -517,7 +517,7 @@ const speedbar = createSpeedbar(document.getElementById("speedbar"), [
   { label: "Redo", icon: "redo", title: "Redo", action: onRedo },
   "-",
   { label: "Dialog", icon: "dialog", title: "New Dialog", action: onNewDialog },
-  { label: "IDs", title: "Identifiers", action: () => openIdentifiersWindow(wm, project) },
+  { label: "IDs", icon: "ids", title: "Identifiers", action: () => openIdentifiersWindow(wm, project) },
 ], {
   mode: speedBarMode,
   onModeChange: (m) => { speedBarMode = m; },
