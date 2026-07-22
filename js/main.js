@@ -159,7 +159,22 @@ async function loadProjectFiles(files) {
     }
   }
 
-  setAppTitle();
+  // Global button press visual feedback
+document.addEventListener("mousedown", (e) => {
+  const btn = e.target.closest(".win-btn");
+  if (btn && !btn.disabled) btn.classList.add("btn-pressed");
+});
+document.addEventListener("mouseup", () => {
+  document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
+});
+document.addEventListener("mouseleave", (e) => {
+  // When mouse leaves any button while pressed, release it
+  if (e.target.classList?.contains("btn-pressed")) {
+    e.target.classList.remove("btn-pressed");
+  }
+}, true);
+
+setAppTitle();
   setStatus("Ready", `Loaded ${files.map((x) => x.name).join(", ")}`);
   project._emit();
 }
@@ -175,7 +190,22 @@ function onNewProject() {
   placeDef = null;
   activeDialog = null;
   activeSelection = null;
-  setAppTitle();
+  // Global button press visual feedback
+document.addEventListener("mousedown", (e) => {
+  const btn = e.target.closest(".win-btn");
+  if (btn && !btn.disabled) btn.classList.add("btn-pressed");
+});
+document.addEventListener("mouseup", () => {
+  document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
+});
+document.addEventListener("mouseleave", (e) => {
+  // When mouse leaves any button while pressed, release it
+  if (e.target.classList?.contains("btn-pressed")) {
+    e.target.classList.remove("btn-pressed");
+  }
+}, true);
+
+setAppTitle();
   setStatus("Ready", "New project");
 }
 
@@ -652,6 +682,21 @@ window.addEventListener("keydown", (ev) => {
     onSaveProject();
   }
 });
+
+// Global button press visual feedback
+document.addEventListener("mousedown", (e) => {
+  const btn = e.target.closest(".win-btn");
+  if (btn && !btn.disabled) btn.classList.add("btn-pressed");
+});
+document.addEventListener("mouseup", () => {
+  document.querySelectorAll(".btn-pressed").forEach((b) => b.classList.remove("btn-pressed"));
+});
+document.addEventListener("mouseleave", (e) => {
+  // When mouse leaves any button while pressed, release it
+  if (e.target.classList?.contains("btn-pressed")) {
+    e.target.classList.remove("btn-pressed");
+  }
+}, true);
 
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };

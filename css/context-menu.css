@@ -48,8 +48,8 @@
 .align-dialog fieldset,
 .size-dialog fieldset {
   border: 2px groove var(--face, #c0c0c0);
-  padding: 8px 12px;
-  margin: 8px 0;
+  padding: 4px 8px;
+  margin: 4px 0;
 }
 .align-dialog legend,
 .size-dialog legend {
@@ -60,14 +60,14 @@
 .align-dialog label,
 .size-dialog label {
   display: block;
-  padding: 2px 0;
+  padding: 1px 0;
   font-size: 11px;
   cursor: default;
 }
 .align-actions {
-  text-align: right;
-  padding: 8px 0 4px;
-  margin-top: 8px;
+  text-align: center;
+  padding: 6px 0 2px;
+  margin-top: 4px;
   border-top: 1px solid var(--shadow, #808080);
 }
 .align-actions .win-btn {
@@ -78,12 +78,12 @@
 .size-panels {
   display: flex;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .size-panel {
   flex: 1;
   border: 2px groove var(--face, #c0c0c0);
-  padding: 8px 12px;
+  padding: 4px 8px;
 }
 .size-panel legend {
   font-weight: bold;
@@ -92,7 +92,7 @@
 }
 .size-panel label {
   display: block;
-  padding: 2px 0;
+  padding: 1px 0;
   font-size: 11px;
   cursor: default;
 }
