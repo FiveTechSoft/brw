@@ -609,10 +609,6 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
  * @param {import('../core/project-model.js').DialogResource} dialog
  */
 export function openTestDialog(wm, project, dialog) {
-  const overlay = document.createElement("div");
-  overlay.className = "test-dialog-overlay";
-  overlay.style.cssText = "position:fixed;inset:0;z-index:10000";
-
   const host = document.createElement("div");
   host.className = "test-dialog-host";
 
@@ -636,8 +632,8 @@ export function openTestDialog(wm, project, dialog) {
   host.style.top = "50%";
   host.style.transform = "translate(-50%, -50%)";
   host.style.cursor = "move";
-  overlay.appendChild(host);
-  document.body.appendChild(overlay);
+  host.style.zIndex = "10000";
+  document.body.appendChild(host);
 
   // Drag by dialog caption
   const caption = host.querySelector(".dialog-caption");
@@ -663,7 +659,7 @@ export function openTestDialog(wm, project, dialog) {
   }
 
   function closeTestDialog() {
-    overlay.remove();
+    host.remove();
     document.removeEventListener("keydown", onKey);
   }
 
