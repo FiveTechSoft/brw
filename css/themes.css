@@ -751,9 +751,8 @@
 }
 
 /* Win11 — MDI window resize handles */
-[data-theme="win11"] .mdi-window {
-  resize: both;
-  overflow: hidden;
+[data-theme="win11"] .mdi-resize {
+  display: none;
 }
 
 /* Win11 — Checkbox / Radio Fluent style */
