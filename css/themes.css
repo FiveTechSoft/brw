@@ -299,14 +299,6 @@
 [data-theme="win11"] #desktop {
   background: linear-gradient(160deg, #001b4f 0%, #003399 30%, #0078d4 50%, #60cdff 70%, #c4e0f9 100%);
 }
-[data-theme="win11"] #desktop::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 80%, rgba(0, 120, 212, 0.4) 0%, rgba(0, 51, 153, 0.2) 40%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-}
 
 /* Windows 11 — Mica window chrome */
 [data-theme="win11"] .mdi-window {
