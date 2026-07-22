@@ -43,3 +43,34 @@
   background: var(--shadow, #808080);
   margin: 2px 4px;
 }
+
+/* Align / Size modal dialogs */
+.align-dialog fieldset,
+.size-dialog fieldset {
+  border: 2px groove var(--face, #c0c0c0);
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+.align-dialog legend,
+.size-dialog legend {
+  font-weight: bold;
+  font-size: 11px;
+  padding: 0 4px;
+}
+.align-dialog label,
+.size-dialog label {
+  display: block;
+  padding: 2px 0;
+  font-size: 11px;
+  cursor: default;
+}
+.align-actions {
+  text-align: right;
+  padding: 8px 0 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--shadow, #808080);
+}
+.align-actions .win-btn {
+  min-width: 60px;
+  margin-left: 6px;
+}

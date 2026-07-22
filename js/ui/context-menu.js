@@ -57,9 +57,15 @@ export function showContextMenu(items, x, y, anchor) {
   document.body.appendChild(menu);
   activeMenu = menu;
 
-  // Close on click outside
+  // Close on mousedown outside
+  const onDown = (e) => {
+    if (!menu.contains(e.target)) {
+      hideContextMenu();
+      document.removeEventListener("mousedown", onDown, true);
+    }
+  };
   setTimeout(() => {
-    document.addEventListener("click", hideContextMenu, { once: true });
+    document.addEventListener("mousedown", onDown, true);
   }, 0);
 }
 

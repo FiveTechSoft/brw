@@ -8,6 +8,7 @@ import { openStyleDialog } from "./dialog-styles.js";
 import { openRcTextViewer } from "../ui/rc-text-viewer.js";
 import { openPropertyInspector } from "../windows/property-inspector.js";
 import { showContextMenu } from "../ui/context-menu.js";
+import { openAlignDialog, openSizeDialog } from "./dialog-align-size.js";
 
 /**
  * @param {import('../ui/window-manager.js').WindowManager} wm
@@ -164,6 +165,13 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     for (const [ctl, el] of controlEls) {
       el.addEventListener("mousedown", (ev) => {
         ev.stopPropagation();
+        if (ev.button === 2) {
+          // Right-click: just update selection, don't repaint (contextmenu will fire next)
+          if (!ev.shiftKey && !selection.has(ctl)) {
+            selection = new Set([ctl]);
+          }
+          return;
+        }
         onControlMouseDown(ctl, ev);
       });
     }
@@ -185,8 +193,8 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
           } },
           { label: "Duplicate", action: () => duplicateSelection() },
           { separator: true },
-          { label: "Align..." },
-          { label: "Size..." },
+          { label: "Align...", action: () => { if (selection.size >= 2) openAlignDialog(wm, selection, dialog, project, repaint); } },
+          { label: "Size...", action: () => { if (selection.size >= 2) openSizeDialog(wm, selection, dialog, project, repaint); } },
         ], ev.clientX, ev.clientY);
       });
     }
