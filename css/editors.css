@@ -1,6 +1,6 @@
-/* css/editors.css — Project tree, dialog canvas, BWCC, palettes */
+﻿/* css/editors.css â€” Project tree, dialog canvas, BWCC, palettes */
 
-/* ——— App status bar ——— */
+/* â€”â€”â€” App status bar â€”â€”â€” */
 #statusbar {
   position: absolute;
   left: 0;
@@ -34,7 +34,7 @@
   bottom: 48px !important;
 }
 
-/* ——— Project window ——— */
+/* â€”â€”â€” Project window â€”â€”â€” */
 .project-window {
   display: flex;
   flex-direction: column;
@@ -133,7 +133,7 @@
   font: 11px "Courier New", monospace;
 }
 
-/* ——— Dialog editor ——— */
+/* â€”â€”â€” Dialog editor â€”â€”â€” */
 .dialog-editor {
   display: flex;
   flex-direction: column;
@@ -401,7 +401,7 @@
   position: relative;
 }
 .bor-check-box::after {
-  content: "✓";
+  content: "âœ“";
   position: absolute;
   left: 0;
   top: -2px;
@@ -643,4 +643,45 @@
 }
 .test-focusable:focus {
   outline: 1px dotted #000;
+}
+
+/* SpeedBar modes */
+.speedbar-vertical {
+  flex-direction: column !important;
+  width: 32px !important;
+  height: auto !important;
+  padding: 2px !important;
+}
+.speedbar-vertical .speedbar-btn {
+  min-width: 24px !important;
+  min-height: 22px !important;
+  padding: 0 2px !important;
+  writing-mode: horizontal-tb;
+}
+.speedbar-vertical .speedbar-sep {
+  width: 24px !important;
+  height: 0 !important;
+  border-left: none !important;
+  border-top: 1px solid var(--shadow) !important;
+  margin: 2px 0 !important;
+}
+
+/* Fieldset styling for Preferences */
+.style-dialog fieldset {
+  border: 1px solid var(--shadow);
+  padding: 8px;
+  margin: 0 0 8px 0;
+}
+.style-dialog legend {
+  padding: 0 4px;
+  font-weight: bold;
+}
+.style-dialog input[type="range"] {
+  vertical-align: middle;
+}
+.style-dialog .undo-val {
+  display: inline-block;
+  min-width: 24px;
+  text-align: center;
+  font-weight: bold;
 }

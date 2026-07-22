@@ -1,4 +1,4 @@
-// js/main.js — Resource Workshop shell (classic menu + Project + Dialog Editor)
+﻿// js/main.js — Resource Workshop shell (classic menu + Project + Dialog Editor)
 import { ProjectModel } from "./core/project-model.js";
 import { saveDesktop, loadDesktop } from "./core/app-state.js";
 import { WindowManager } from "./ui/window-manager.js";
@@ -11,6 +11,7 @@ import { openIdentifiersWindow } from "./windows/identifiers-window.js";
 import { openDialogEditor } from "./editors/dialog-editor.js";
 import { openControlPalette } from "./editors/control-palette.js";
 import { openAlignPalette } from "./editors/align-palette.js";
+import { openPreferencesDialog } from "./ui/preferences-dialog.js";
 import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
 import { compileRc, compileHeader } from "./engine/rc-compiler.js";
 import { readRes } from "./engine/res-reader.js";
@@ -27,6 +28,12 @@ let placeDef = null;
 let unitMode = "dialog";
 /** @type {object|null} */
 let activeDialog = null;
+/** @type {Set<object>|null} */
+let activeSelection = null;
+/** @type {string} */
+let speedBarMode = "horizontal";
+/** @type {boolean} */
+let gridSnap = true;
 
 const fileMap = new Map(); // basename -> text content
 
@@ -46,11 +53,13 @@ function openResource(r) {
   if (!r) return;
   if (r.type === "DIALOG" || r.type === "DIALOGEX") {
     activeDialog = r;
-    openDialogEditor(wm, project, r, {
+    const editorWin = openDialogEditor(wm, project, r, {
       unitMode,
       onUnitMode: (m) => { unitMode = m; },
       getPlaceDef: () => placeDef,
       clearPlaceDef: () => { placeDef = null; },
+      onSelectionChange: (sel) => { activeSelection = sel; },
+      gridSnap,
     });
     setStatus("Ready", `DIALOG : ${r.id}`);
   } else {
@@ -58,13 +67,9 @@ function openResource(r) {
   }
 }
 
-/**
- * @param {{name:string, kind:string, text?:string, buffer?:ArrayBuffer}[]} files
- */
 async function loadProjectFiles(files) {
   if (!files?.length) return;
 
-  // Index text files for #include
   for (const f of files) {
     if (f.text != null) {
       fileMap.set(f.name, f.text);
@@ -76,13 +81,12 @@ async function loadProjectFiles(files) {
   }
 
   const resolveInclude = (path) => {
-    const clean = path.replace(/["'<>]/g, "").trim();
+    const clean = path.replace(/["'"<>]/g, "").trim();
     const base = clean.split(/[/\\]/).pop();
     return fileMap.get(clean) || fileMap.get(clean.toLowerCase()) ||
       fileMap.get(base) || fileMap.get(base.toLowerCase()) || null;
   };
 
-  // Headers first
   for (const f of files) {
     if (f.kind === "h" || f.kind === "rh" || f.kind === "inc") {
       const parsed = parseRc(f.text || "", { resolveInclude });
@@ -93,7 +97,6 @@ async function loadProjectFiles(files) {
     }
   }
 
-  // RC / DLG
   for (const f of files) {
     if (f.kind === "rc" || f.kind === "dlg") {
       const symbols = {};
@@ -111,7 +114,6 @@ async function loadProjectFiles(files) {
     }
   }
 
-  // RES
   for (const f of files) {
     if (f.kind === "res" && f.buffer) {
       const { resources, errors } = readRes(f.buffer);
@@ -128,7 +130,6 @@ async function loadProjectFiles(files) {
     }
   }
 
-  // Other files listed only
   for (const f of files) {
     if (["bmp", "ico", "cur", "ptr"].includes(f.kind)) {
       project.files.push({ path: f.name, kind: f.kind, content: f.buffer || f.text });
@@ -150,51 +151,74 @@ function onNewProject() {
   fileMap.clear();
   placeDef = null;
   activeDialog = null;
+  activeSelection = null;
   setAppTitle();
   setStatus("Ready", "New project");
 }
 
-function onNewDialog() {
+function createDialogFromTemplate(template) {
   const dlg = project.createDialog();
-  dlg.className = "bordlg";
-  dlg.title = "Dialog";
-  // starter BWCC buttons like classic Preferences sample
-  const ok = project.identifiers.getByName("IDOK") || { name: "IDOK", value: 1 };
+  dlg.className = template.className || null;
+  dlg.title = template.title || "Dialog";
+  dlg.cx = template.cx || 200;
+  dlg.cy = template.cy || 100;
+
   if (!project.identifiers.getByName("IDOK")) project.identifiers.define("IDOK", 1);
   if (!project.identifiers.getByName("IDCANCEL")) project.identifiers.define("IDCANCEL", 2);
   if (!project.identifiers.getByName("IDHELP")) project.identifiers.define("IDHELP", 998);
-  project.addControl(dlg, {
-    id: "IDOK",
-    className: "BorBtn",
-    text: "",
-    x: 40, y: 70, cx: 32, cy: 20,
-    style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | WS.GROUP,
-    exStyle: 0,
-    tabIndex: 0,
-    groupStart: true,
-  });
-  project.addControl(dlg, {
-    id: "IDCANCEL",
-    className: "BorBtn",
-    text: "",
-    x: 84, y: 70, cx: 32, cy: 20,
-    style: WS.CHILD | WS.VISIBLE | WS.TABSTOP,
-    exStyle: 0,
-    tabIndex: 1,
-    groupStart: false,
-  });
-  project.addControl(dlg, {
-    id: "IDHELP",
-    className: "BorBtn",
-    text: "",
-    x: 128, y: 70, cx: 32, cy: 20,
-    style: WS.CHILD | WS.VISIBLE | WS.TABSTOP,
-    exStyle: 0,
-    tabIndex: 2,
-    groupStart: false,
-  });
+
+  for (const cdef of template.controls || []) {
+    project.addControl(dlg, { ...cdef });
+  }
+
+  openResource(dlg);
+  return dlg;
+}
+
+function onNewDialog() {
+  // Default: Borland BWCC dialog with OK/Cancel/Help
+  const dlg = project.createDialog();
+  dlg.className = "bordlg";
+  dlg.title = "Dialog";
+  if (!project.identifiers.getByName("IDOK")) project.identifiers.define("IDOK", 1);
+  if (!project.identifiers.getByName("IDCANCEL")) project.identifiers.define("IDCANCEL", 2);
+  if (!project.identifiers.getByName("IDHELP")) project.identifiers.define("IDHELP", 998);
+  // BorBtn OK Cancel Help (right edge, bottom)
+  const right = dlg.cx - 40;
+  project.addControl(dlg, { id: "IDOK", className: "BorBtn", text: "", x: right - 96, y: dlg.cy - 30, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | WS.GROUP, exStyle: 0, tabIndex: 0, groupStart: true });
+  project.addControl(dlg, { id: "IDCANCEL", className: "BorBtn", text: "", x: right - 56, y: dlg.cy - 30, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP, exStyle: 0, tabIndex: 1, groupStart: false });
+  project.addControl(dlg, { id: "IDHELP", className: "BorBtn", text: "", x: right - 16, y: dlg.cy - 30, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP, exStyle: 0, tabIndex: 2, groupStart: false });
   openResource(dlg);
 }
+
+// Template definitions
+const DIALOG_TEMPLATES = {
+  "borland-bwcc": {
+    title: "Dialog",
+    className: "bordlg",
+    cx: 200, cy: 100,
+    controls: [
+      { id: "IDOK", className: "BorBtn", text: "", x: 80, y: 70, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | WS.GROUP, exStyle: 0, tabIndex: 0, groupStart: true },
+      { id: "IDCANCEL", className: "BorBtn", text: "", x: 120, y: 70, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP, exStyle: 0, tabIndex: 1, groupStart: false },
+      { id: "IDHELP", className: "BorBtn", text: "", x: 160, y: 70, cx: 32, cy: 20, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP, exStyle: 0, tabIndex: 2, groupStart: false },
+    ],
+  },
+  "standalone-windows": {
+    title: "Dialog",
+    className: null,
+    cx: 200, cy: 100,
+    controls: [
+      { id: "IDOK", className: "BUTTON", text: "OK", x: 60, y: 70, cx: 50, cy: 14, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | WS.GROUP | BS.DEFPUSHBUTTON, exStyle: 0, tabIndex: 0, groupStart: true },
+      { id: "IDCANCEL", className: "BUTTON", text: "Cancel", x: 120, y: 70, cx: 50, cy: 14, style: WS.CHILD | WS.VISIBLE | WS.TABSTOP | BS.PUSHBUTTON, exStyle: 0, tabIndex: 1, groupStart: false },
+    ],
+  },
+  "empty": {
+    title: "Dialog",
+    className: null,
+    cx: 200, cy: 100,
+    controls: [],
+  },
+};
 
 function onSaveProject() {
   const base = project.name || "project";
@@ -251,12 +275,18 @@ function onTile() {
   });
 }
 
-/** Align selected controls in the focused dialog editor — uses last active dialog */
+/** Align controls using active selection or all controls */
 function onAlign(cmd) {
   const dlg = activeDialog || project.dialogs()[0];
   if (!dlg || !dlg.controls?.length) return;
-  // Align all controls if multi-select not tracked globally — use all for demo of hspace
-  const sel = dlg.controls;
+
+  // Use activeSelection if available, otherwise all controls
+  let sel;
+  if (activeSelection && activeSelection.size > 0) {
+    sel = [...activeSelection].filter((c) => dlg.controls.includes(c));
+  } else {
+    sel = dlg.controls;
+  }
   if (sel.length < 2 && !cmd.startsWith("cdlg")) return;
 
   const xs = sel.map((c) => c.x);
@@ -318,20 +348,37 @@ function onAlign(cmd) {
 function onAbout() {
   alert(
     "Borland Resource Workshop (Web)\n" +
-    "Identical-clone target — Phase 1 Dialog Editor\n\n" +
-    "Local-first · HTML5/CSS3/JS\n" +
+    "Identical-clone target - Phase 1 Dialog Editor\n\n" +
+    "Local-first . HTML5/CSS3/JS\n" +
     "Gold standard: classic RW Dialog Tools / Align / BWCC"
   );
 }
 
-// ——— Menus (classic order) ———
+function onPreferences() {
+  openPreferencesDialog(wm, project, {
+    speedBarMode: speedBarMode,
+    gridSnap: gridSnap,
+    onApply: (prefs) => {
+      speedBarMode = prefs.speedBarMode;
+      gridSnap = prefs.gridSnap;
+      speedbar.setMode(prefs.speedBarMode);
+      setStatus("Ready", `Preferences: Undo=${prefs.undoLimit}, SpeedBar=${prefs.speedBarMode}, GridSnap=${prefs.gridSnap}`);
+    },
+  });
+}
+
+// -- Menus (classic order) --
 createMenubar(document.getElementById("menubar"), [
   {
     label: "File",
     items: [
       { label: "New Project", action: onNewProject },
-      { label: "Open…", action: onOpen },
+      { label: "Open...", action: onOpen },
+      "-",
       { label: "Save Project", action: onSaveProject },
+      { label: "Save File As...", action: () => { setStatus("Ready", "Save File As not implemented in Phase 1"); } },
+      "-",
+      { label: "Preferences...", action: onPreferences },
       "-",
       { label: "Exit", action: onNewProject },
     ],
@@ -341,13 +388,23 @@ createMenubar(document.getElementById("menubar"), [
     items: [
       { label: "Undo", action: onUndo },
       { label: "Redo", action: onRedo },
+      "-",
+      { label: "Cut", action: () => setStatus("Ready", "Cut not implemented") },
+      { label: "Copy", action: () => setStatus("Ready", "Copy not implemented") },
+      { label: "Paste", action: () => setStatus("Ready", "Paste not implemented") },
+      { label: "Delete", action: () => setStatus("Ready", "Delete via Dialog Editor") },
+      { label: "Duplicate", action: () => setStatus("Ready", "Duplicate via Dialog Editor") },
     ],
   },
   {
     label: "Resource",
     items: [
-      { label: "New Dialog", action: onNewDialog },
-      { label: "Identifiers…", action: () => openIdentifiersWindow(wm, project) },
+      { label: "New Borland BWCC Dialog", action: () => createDialogFromTemplate(DIALOG_TEMPLATES["borland-bwcc"]) },
+      { label: "New Standard Dialog", action: () => createDialogFromTemplate(DIALOG_TEMPLATES["standalone-windows"]) },
+      { label: "New Empty Dialog", action: () => createDialogFromTemplate(DIALOG_TEMPLATES["empty"]) },
+      { label: "New Dialog (BorBtn)", action: onNewDialog },
+      { label: "Identifiers...", action: () => openIdentifiersWindow(wm, project) },
+      { label: "Add to Project...", action: onOpen },
     ],
   },
   {
@@ -365,8 +422,12 @@ createMenubar(document.getElementById("menubar"), [
       { label: "Right sides", action: () => onAlign("right") },
       { label: "Tops", action: () => onAlign("top") },
       { label: "Bottoms", action: () => onAlign("bottom") },
+      { label: "Horizontal centers", action: () => onAlign("hcenter") },
+      { label: "Vertical centers", action: () => onAlign("vcenter") },
       { label: "Space equally H", action: () => onAlign("hspace") },
+      { label: "Space equally V", action: () => onAlign("vspace") },
       { label: "Center in dialog H", action: () => onAlign("cdlg-h") },
+      { label: "Center in dialog V", action: () => onAlign("cdlg-v") },
     ],
   },
   {
@@ -380,8 +441,9 @@ createMenubar(document.getElementById("menubar"), [
             unitMode,
             getPlaceDef: () => placeDef,
             clearPlaceDef: () => { placeDef = null; },
+            onSelectionChange: (sel) => { activeSelection = sel; },
+            gridSnap,
           });
-          // trigger test via keyboard path — open editor then user clicks Test
           setStatus("Ready", "Open dialog editor and click Test");
         },
       },
@@ -410,7 +472,7 @@ createMenubar(document.getElementById("menubar"), [
   },
 ]);
 
-createSpeedbar(document.getElementById("speedbar"), [
+const speedbar = createSpeedbar(document.getElementById("speedbar"), [
   { label: "New", title: "New Project", action: onNewProject },
   { label: "Open", title: "Open", action: onOpen },
   { label: "Save", title: "Save Project", action: onSaveProject },
@@ -420,7 +482,10 @@ createSpeedbar(document.getElementById("speedbar"), [
   "-",
   { label: "Dialog", title: "New Dialog", action: onNewDialog },
   { label: "IDs", title: "Identifiers", action: () => openIdentifiersWindow(wm, project) },
-]);
+], {
+  mode: speedBarMode,
+  onModeChange: (m) => { speedBarMode = m; },
+});
 
 const hooks = {
   onOpenResource: openResource,
@@ -436,16 +501,17 @@ if (desk?.undoLimit) project.undo.setLimit(desk.undoLimit);
 if (desk?.unitMode) unitMode = desk.unitMode;
 if (desk?.sortMode) project.sortMode = desk.sortMode;
 if (desk?.filters) Object.assign(project.filters, desk.filters);
+if (desk?.speedBarMode) { speedBarMode = desk.speedBarMode; speedbar.setMode(desk.speedBarMode); }
+if (desk?.gridSnap != null) gridSnap = desk.gridSnap;
 
 openProjectWindow(wm, project, hooks);
 openControlPalette(wm, (def) => {
   placeDef = def;
-  setStatus("Ready", `Place: ${def.label || def.className} — click dialog canvas`);
+  setStatus("Ready", `Place: ${def.label || def.className} -- click dialog canvas`);
 });
 openAlignPalette(wm, onAlign);
 
 if (desk?.windows) {
-  // apply after windows created
   setTimeout(() => wm.applyLayout(desk.windows), 0);
 }
 
@@ -478,6 +544,8 @@ window.addEventListener("beforeunload", () => {
     unitMode,
     sortMode: project.sortMode,
     filters: { ...project.filters },
+    speedBarMode,
+    gridSnap,
   });
 });
 
@@ -505,3 +573,5 @@ window.addEventListener("keydown", (ev) => {
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
 console.log("Borland Resource Workshop boot complete");
+
+

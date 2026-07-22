@@ -23,17 +23,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/) (pre-1.0 = API in
 - Save Project → `resource.h` + `.rc` + `.res` (download)
 - Desktop `localStorage`; carga `samples/about.rc` al arrancar
 - Engine smoke: **19 tests** (incluye RES/DLGTEMPLATE)
+- **Preferences dialog**: Undo levels (1-99 slider), SpeedBar mode (Off/Popup/H/V), Grid snap toggle, Backup option
+- **SpeedBar modes**: Off (oculta), Popup (flotante), Horizontal (barra clásica), Vertical (columna)
+- **Dialog templates**: Borland BWCC, Standard Windows, Empty (menú Resource → New)
+- **Grid snap**: controles se alinean a múltiplos de 2 DU en move/resize (configurable vía Preferences)
+- **Multi-selection alignment**: Align palette opera solo sobre controles seleccionados en el editor
 
 ### Changed
 
 - Objetivo de producto: clon web **idéntico** (`ROADMAP.md` + gold standard `workshop.png`)
 - Desktop por defecto gris clásico (`#808080`)
 
-### Still open (hacia 0.3.0 / 0.4.0)
+### Still open (hacia 0.4.0)
 
-- Iconos 16×16 Tools idénticos a la captura; SpeedBar modes Off/Popup/H/V
-- Align sobre selección multi del editor (no solo todos los controles)
-- Preferences dialog como en captura
+- Iconos 16×16 Tools idénticos a la captura
 - Array layout, Draft/Normal modes
 - PE/DLL; Menu/Accel/String/Paint editors
 - 1.0.0 solo con DoD de parity global

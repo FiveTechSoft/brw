@@ -1,5 +1,5 @@
-/**
- * Dialog Editor — select/move/resize, tools, test mode.
+﻿/**
+ * Dialog Editor â€” select/move/resize, tools, test mode.
  */
 import { WS, STD_ID } from "../core/constants.js";
 import { defaultControl } from "../core/project-model.js";
@@ -10,7 +10,7 @@ import { openStyleDialog } from "./dialog-styles.js";
  * @param {import('../ui/window-manager.js').WindowManager} wm
  * @param {import('../core/project-model.js').ProjectModel} project
  * @param {import('../core/project-model.js').DialogResource} dialog
- * @param {{ unitMode?: "dialog"|"screen", onUnitMode?: (m:string)=>void, getPlaceDef?: () => object|null, clearPlaceDef?: () => void }} [opts]
+ * @param {{ unitMode?: "dialog"|"screen", onUnitMode?: (m:string)=>void, getPlaceDef?: () => object|null, clearPlaceDef?: () => void, onSelectionChange?: (sel: Set<object>) => void, gridSnap?: boolean }} [opts]
  */
 export function openDialogEditor(wm, project, dialog, opts = {}) {
   const winId = `dialog-editor:${dialog.id}`;
@@ -22,6 +22,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
   /** @type {"select"|"tab"|"group"|"order"} */
   let tool = "select";
   let unitMode = opts.unitMode || "dialog";
+  const gridSnap = opts.gridSnap !== false;
   /** @type {Set<object>} */
   let selection = new Set();
   let tabAssign = 0;
@@ -343,7 +344,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       }
     }
 
-    // Double-click caption → dialog styles
+    // Double-click caption â†’ dialog styles
     const cap = canvasWrap.querySelector(".dialog-caption");
     if (cap) {
       cap.addEventListener("dblclick", () => {
@@ -600,3 +601,6 @@ function cssEscape(s) {
   if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(s);
   return String(s).replace(/"/g, '\\"');
 }
+
+
+

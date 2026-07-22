@@ -1,4 +1,4 @@
-// js/core/app-state.js — desktop layout persistence
+﻿// js/core/app-state.js — desktop layout persistence
 
 const KEY = "brw.desktop.v1";
 
@@ -10,6 +10,8 @@ const KEY = "brw.desktop.v1";
  * @property {"byType"|"byFile"} [sortMode]
  * @property {{showResources?:boolean,showIdentifiers?:boolean,showItems?:boolean,showUnusedTypes?:boolean}} [filters]
  * @property {string[]} [lastPaths]
+ * @property {"off"|"popup"|"horizontal"|"vertical"} [speedBarMode]
+ * @property {boolean} [gridSnap]
  */
 
 /**
