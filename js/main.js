@@ -11,6 +11,7 @@ import { openIdentifiersWindow } from "./windows/identifiers-window.js";
 import { openDialogEditor } from "./editors/dialog-editor.js";
 import { openControlPalette } from "./editors/control-palette.js";
 import { openAlignPalette } from "./editors/align-palette.js";
+import { openPropertyInspector } from "./windows/property-inspector.js";
 import { openPreferencesDialog } from "./ui/preferences-dialog.js";
 import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
 import { openRcTextViewer } from "./ui/rc-text-viewer.js";
@@ -579,6 +580,7 @@ window.addEventListener("keydown", (ev) => {
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
 console.log("Borland Resource Workshop boot complete");
+
 
 
 

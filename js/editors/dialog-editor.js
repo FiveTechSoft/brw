@@ -6,6 +6,7 @@ import { defaultControl } from "../core/project-model.js";
 import { renderDialog, duToPx, pxToDu, fontMetrics } from "./dialog-renderer.js";
 import { openStyleDialog } from "./dialog-styles.js";
 import { openRcTextViewer } from "../ui/rc-text-viewer.js";
+import { openPropertyInspector } from "../windows/property-inspector.js";
 
 /**
  * @param {import('../ui/window-manager.js').WindowManager} wm
@@ -58,6 +59,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     ["dup", "Duplicate"],
     ["undo", "Undo"],
     ["viewrc", "View RC"],
+    ["props", "Props"],
   ];
   /** @type {Record<string, HTMLButtonElement>} */
   const toolBtns = {};
@@ -100,6 +102,12 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
   toolBtns.order.onclick = () => setTool("order");
   toolBtns.test.onclick = () => openTestDialog(wm, project, dialog);
   toolBtns.viewrc.onclick = () => openRcTextViewer(wm, project);
+  toolBtns.props.onclick = () => {
+    openPropertyInspector(wm, project, {
+      getSelection: () => selection,
+      getDialog: () => dialog,
+    });
+  };
   toolBtns.dup.onclick = () => duplicateSelection();
   toolBtns.undo.onclick = () => {
     if (project.undo.canUndo) project.undo.undo();
@@ -746,3 +754,6 @@ function cssEscape(s) {
   if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(s);
   return String(s).replace(/"/g, '\\"');
 }
+
+
+
