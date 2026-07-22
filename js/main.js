@@ -16,7 +16,7 @@ import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
 import { compileRc, compileHeader } from "./engine/rc-compiler.js";
 import { readRes } from "./engine/res-reader.js";
 import { writeRes } from "./engine/res-writer.js";
-import { WS } from "./core/constants.js";
+import { WS, BS } from "./core/constants.js";
 
 const project = new ProjectModel();
 const desktopEl = setupDesktop(document.getElementById("desktop"));
@@ -573,5 +573,6 @@ window.addEventListener("keydown", (ev) => {
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
 console.log("Borland Resource Workshop boot complete");
+
 
 
