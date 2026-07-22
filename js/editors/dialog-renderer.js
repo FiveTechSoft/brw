@@ -161,7 +161,7 @@ export function renderDialog(container, dialog, opts = {}) {
     }
 
     if (opts.interactive || opts.onControlClick) {
-      el.addEventListener("mousedown", (ev) => {
+      el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         opts.onControlClick?.(c, ev);
       });
