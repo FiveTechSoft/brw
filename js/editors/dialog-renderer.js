@@ -107,6 +107,15 @@ export function renderDialog(container, dialog, opts = {}) {
   applyBordlgCanvas(canvas, dialog);
   outer.appendChild(canvas);
 
+  if (opts.showHandles && !opts.interactive) {
+    for (const h of ["nw","n","ne","e","se","s","sw","w"]) {
+      const handle = document.createElement("div");
+      handle.className = `resize-handle frame-handle handle-${h}`;
+      handle.dataset.handle = h;
+      outer.appendChild(handle);
+    }
+  }
+
   /** @type {Map<object, HTMLElement>} */
   const controlEls = new Map();
 

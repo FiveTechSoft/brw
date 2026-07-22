@@ -32,7 +32,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
   const win = wm.createWindow({
     id: winId,
     title: `DIALOG : ${dialog.id}`,
-    x: 180,
+    x: 440,
     y: 30,
     w: 560,
     h: 460,
@@ -363,6 +363,15 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
         });
       });
     }
+
+    // Frame resize handles
+    for (const handle of canvasWrap.querySelectorAll(".frame-handle")) {
+      handle.addEventListener("mousedown", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        beginResizeFrame(handle.dataset.handle, ev);
+      });
+    }
   }
 
   function beginResize(ctl, handle, ev) {
@@ -381,6 +390,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
         x = before.x + dx;
         cx = Math.max(1, before.cx - dx);
       }
+
       if (handle.includes("n")) {
         y = before.y + dy;
         cy = Math.max(1, before.cy - dy);
@@ -398,6 +408,42 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       Object.assign(ctl, before);
       if (after.x !== before.x || after.y !== before.y || after.cx !== before.cx || after.cy !== before.cy) {
         project.moveResizeControl(ctl, after);
+      }
+      repaint();
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  }
+
+  function beginResizeFrame(handle, ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const startX = ev.clientX;
+    const startY = ev.clientY;
+    const before = { cx: dialog.cx, cy: dialog.cy };
+    const m = fontMetrics(dialog.font);
+
+    const move = (e) => {
+      const dx = Math.round(((e.clientX - startX) * 4) / m.avgCharWidth);
+      const dy = Math.round(((e.clientY - startY) * 8) / m.fontHeight);
+      let { cx, cy } = before;
+      if (handle.includes("e")) cx = Math.max(8, before.cx + dx);
+      if (handle.includes("s")) cy = Math.max(8, before.cy + dy);
+      if (handle.includes("w")) cx = Math.max(8, before.cx - dx);
+      if (handle.includes("n")) cy = Math.max(8, before.cy - dy);
+      dialog.cx = cx;
+      dialog.cy = cy;
+      renderLive();
+      updateStatus();
+    };
+    const up = () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+      const after = { cx: dialog.cx, cy: dialog.cy };
+      dialog.cx = before.cx;
+      dialog.cy = before.cy;
+      if (after.cx !== before.cx || after.cy !== before.cy) {
+        project.setDialogProps(dialog, after);
       }
       repaint();
     };
@@ -488,26 +534,12 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
  * @param {import('../core/project-model.js').DialogResource} dialog
  */
 export function openTestDialog(wm, project, dialog) {
-  const winId = `test-dialog:${dialog.id}`;
-  if (wm.windows.has(winId)) {
-    wm.focus(winId);
-    return wm.windows.get(winId).api;
-  }
-
-  const win = wm.createWindow({
-    id: winId,
-    title: `Test - ${dialog.title || dialog.id}`,
-    x: 220,
-    y: 80,
-    w: 400,
-    h: 300,
-    modal: true,
-  });
+  const overlay = document.createElement("div");
+  overlay.className = "test-dialog-overlay";
+  overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000";
 
   const host = document.createElement("div");
   host.className = "test-dialog-host";
-  win.content.innerHTML = "";
-  win.content.appendChild(host);
 
   const { controlEls } = renderDialog(host, dialog, {
     interactive: true,
@@ -515,44 +547,34 @@ export function openTestDialog(wm, project, dialog) {
     project,
     showHandles: false,
     onControlClick: (ctl) => {
-      // click activates buttons
       const num = project.identifiers.resolve(ctl.id);
-      if (num === STD_ID.IDOK || num === STD_ID.IDCANCEL || String(ctl.id) === "IDOK" || String(ctl.id) === "IDCANCEL" || String(ctl.id) === "IDC_OK" || String(ctl.id) === "IDC_CANCEL") {
-        win.close();
+      const sid = String(ctl.id);
+      if (num === STD_ID.IDOK || num === STD_ID.IDCANCEL || sid === "IDOK" || sid === "IDCANCEL" || sid === "IDC_OK" || sid === "IDC_CANCEL") {
+        closeTestDialog();
       }
     },
   });
 
-  // Make focusable controls
+  overlay.appendChild(host);
+  document.body.appendChild(overlay);
+
+  function closeTestDialog() {
+    overlay.remove();
+    document.removeEventListener("keydown", onKey);
+  }
+
   const focusable = [];
   for (const [ctl, el] of controlEls) {
     if ((ctl.style & WS.TABSTOP) === WS.TABSTOP || /BorBtn|BUTTON|EDIT|BorCheck|BorRadio/i.test(String(ctl.className))) {
       el.tabIndex = ctl.tabIndex ?? 0;
       el.classList.add("test-focusable");
-      if (/^BorBtn$/i.test(String(ctl.className))) {
-        el.addEventListener("focus", () => {
-          console.debug("BBN_SETFOCUS", ctl.id);
-        });
-        el.addEventListener("mousedown", () => {
-          console.debug("BBN_SETFOCUSMOUSE", ctl.id);
-        });
-      }
-      // IDOK / IDCANCEL via keyboard-like click
       el.addEventListener("click", () => {
         const num = project.identifiers.resolve(ctl.id);
         const sid = String(ctl.id);
-        if (
-          num === STD_ID.IDOK ||
-          num === STD_ID.IDCANCEL ||
-          sid === "IDOK" ||
-          sid === "IDCANCEL" ||
-          sid === "IDC_OK" ||
-          sid === "IDC_CANCEL"
-        ) {
-          win.close();
+        if (num === STD_ID.IDOK || num === STD_ID.IDCANCEL || sid === "IDOK" || sid === "IDCANCEL" || sid === "IDC_OK" || sid === "IDC_CANCEL") {
+          closeTestDialog();
         }
       });
-      // make real buttons keyboard accessible
       if (!/EDIT/i.test(String(ctl.className))) {
         el.setAttribute("role", "button");
       } else {
@@ -563,13 +585,10 @@ export function openTestDialog(wm, project, dialog) {
   }
 
   focusable.sort((a, b) => (a.ctl.tabIndex ?? 0) - (b.ctl.tabIndex ?? 0));
-  if (focusable[0]) focusable[0].el.focus();
+  setTimeout(() => { if (focusable[0]) focusable[0].el.focus(); }, 50);
 
-  host.addEventListener("keydown", (ev) => {
-    if (ev.key === "Escape") {
-      win.close();
-      return;
-    }
+  function onKey(ev) {
+    if (ev.key === "Escape") { closeTestDialog(); return; }
     if (ev.key === "Tab") {
       ev.preventDefault();
       const list = focusable.map((f) => f.el);
@@ -579,28 +598,23 @@ export function openTestDialog(wm, project, dialog) {
       if (next < 0) next = list.length - 1;
       if (next >= list.length) next = 0;
       list[next].focus();
-      const f = focusable[next];
-      if (f && /^BorBtn$/i.test(String(f.ctl.className))) {
-        console.debug("BBN_GOTATAB", f.ctl.id);
-      }
     }
     if (ev.key === "Enter") {
-      // default button
       const def = dialog.controls.find((c) => (c.style & 0x0f) === 1);
       if (def) {
         const num = project.identifiers.resolve(def.id);
-        if (num === STD_ID.IDOK || String(def.id).includes("OK")) win.close();
+        if (num === STD_ID.IDOK || String(def.id).includes("OK")) closeTestDialog();
       }
     }
-  });
+  }
+  document.addEventListener("keydown", onKey);
 
-  return win;
+  overlay.addEventListener("mousedown", (ev) => {
+    if (ev.target === overlay) closeTestDialog();
+  });
 }
 
 function cssEscape(s) {
   if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(s);
   return String(s).replace(/"/g, '\\"');
 }
-
-
-
