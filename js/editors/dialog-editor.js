@@ -166,10 +166,12 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
       el.addEventListener("mousedown", (ev) => {
         ev.stopPropagation();
         if (ev.button === 2) {
-          // Right-click: just update selection, don't repaint (contextmenu will fire next)
+          // Right-click: update selection, don't repaint (contextmenu will fire next)
           if (!ev.shiftKey && !selection.has(ctl)) {
+            // Single right-click replaces selection only if control wasn't selected
             selection = new Set([ctl]);
           }
+          // If control IS already selected, keep multi-selection intact for Align/Size
           return;
         }
         onControlMouseDown(ctl, ev);
@@ -193,8 +195,8 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
           } },
           { label: "Duplicate", action: () => duplicateSelection() },
           { separator: true },
-          { label: "Align...", action: () => { if (selection.size >= 2) openAlignDialog(wm, selection, dialog, project, repaint); } },
-          { label: "Size...", action: () => { if (selection.size >= 2) openSizeDialog(wm, selection, dialog, project, repaint); } },
+          { label: "Align...", disabled: selection.size < 2, action: () => openAlignDialog(wm, selection, dialog, project, repaint) },
+          { label: "Size...", disabled: selection.size < 2, action: () => openSizeDialog(wm, selection, dialog, project, repaint) },
         ], ev.clientX, ev.clientY);
       });
     }

@@ -15,57 +15,114 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
   if (wm.windows.has(winId)) wm.close(winId);
   if (!selection || selection.size < 2) return;
 
+  const sel = [...selection];
+  const ref = sel[0];
+
   const win = wm.createWindow({
     id: winId,
-    title: "Align Controls",
-    x: 200, y: 120, w: 300, h: 340,
+    title: "Align controls",
+    x: 200, y: 120, w: 340, h: 280,
     modal: true,
   });
 
   const root = document.createElement("div");
   root.className = "align-dialog";
   root.innerHTML = `
-    <fieldset>
-      <legend>Horizontal</legend>
-      <label><input type="radio" name="align-h" value="left" checked /> Align Left Edges</label>
-      <label><input type="radio" name="align-h" value="center" /> Align Center Horizontally</label>
-      <label><input type="radio" name="align-h" value="right" /> Align Right Edges</label>
-      <label><input type="radio" name="align-h" value="none" /> No Change</label>
-    </fieldset>
-    <fieldset>
-      <legend>Vertical</legend>
-      <label><input type="radio" name="align-v" value="top" checked /> Align Top Edges</label>
-      <label><input type="radio" name="align-v" value="middle" /> Align Middle Vertically</label>
-      <label><input type="radio" name="align-v" value="bottom" /> Align Bottom Edges</label>
-      <label><input type="radio" name="align-v" value="none" /> No Change</label>
-    </fieldset>
+    <div class="size-panels">
+      <fieldset class="size-panel">
+        <legend>Horizontal alignment</legend>
+        <label><input type="radio" name="align-h" value="none" checked /> No change</label>
+        <label><input type="radio" name="align-h" value="left" /> Left sides</label>
+        <label><input type="radio" name="align-h" value="center" /> Centers</label>
+        <label><input type="radio" name="align-h" value="right" /> Right sides</label>
+        <label><input type="radio" name="align-h" value="space" /> Space equally</label>
+        <label><input type="radio" name="align-h" value="dialog" /> Center in dialog</label>
+      </fieldset>
+      <fieldset class="size-panel">
+        <legend>Vertical alignment</legend>
+        <label><input type="radio" name="align-v" value="none" checked /> No change</label>
+        <label><input type="radio" name="align-v" value="top" /> Tops</label>
+        <label><input type="radio" name="align-v" value="middle" /> Centers</label>
+        <label><input type="radio" name="align-v" value="bottom" /> Bottoms</label>
+        <label><input type="radio" name="align-v" value="space" /> Space equally</label>
+        <label><input type="radio" name="align-v" value="dialog" /> Center in dialog</label>
+      </fieldset>
+    </div>
     <div class="align-actions">
       <button type="button" class="win-btn btn-ok">OK</button>
       <button type="button" class="win-btn btn-cancel">Cancel</button>
     </div>
-`;
+  `;
 
   root.querySelector(".btn-cancel").onclick = () => win.close();
   root.querySelector(".btn-ok").onclick = () => {
-    const sel = [...selection];
-    const ref = sel[0];
     const hMode = root.querySelector('input[name="align-h"]:checked').value;
     const vMode = root.querySelector('input[name="align-v"]:checked').value;
 
     const before = sel.map((c) => ({ c, x: c.x, y: c.y, cx: c.cx, cy: c.cy }));
 
-    for (let i = 1; i < sel.length; i++) {
-      const c = sel[i];
-      let props = {};
-      if (hMode === "left") props.x = ref.x;
-      else if (hMode === "right") props.x = ref.x + ref.cx - c.cx;
-      else if (hMode === "center") props.x = ref.x + Math.round((ref.cx - c.cx) / 2);
+    // --- Horizontal ---
+    if (hMode === "left") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { x: ref.x });
+      }
+    } else if (hMode === "center") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { x: ref.x + Math.round((ref.cx - sel[i].cx) / 2) });
+      }
+    } else if (hMode === "right") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { x: ref.x + ref.cx - sel[i].cx });
+      }
+    } else if (hMode === "space") {
+      if (sel.length >= 3) {
+        const sorted = [...sel].sort((a, b) => a.x - b.x);
+        const totalW = sorted.reduce((s, c) => s + c.cx, 0);
+        const minX = sorted[0].x;
+        const maxX = sorted[sorted.length - 1].x + sorted[sorted.length - 1].cx;
+        const space = Math.round((maxX - minX - totalW) / (sel.length - 1));
+        let curX = minX;
+        for (const c of sorted) {
+          project.moveResizeControl(c, { x: curX });
+          curX += c.cx + space;
+        }
+      }
+    } else if (hMode === "dialog") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { x: Math.round((dialog.cx - sel[i].cx) / 2) });
+      }
+    }
 
-      if (vMode === "top") props.y = ref.y;
-      else if (vMode === "bottom") props.y = ref.y + ref.cy - c.cy;
-      else if (vMode === "middle") props.y = ref.y + Math.round((ref.cy - c.cy) / 2);
-
-      if (Object.keys(props).length) project.moveResizeControl(c, props);
+    // --- Vertical ---
+    if (vMode === "top") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { y: ref.y });
+      }
+    } else if (vMode === "middle") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { y: ref.y + Math.round((ref.cy - sel[i].cy) / 2) });
+      }
+    } else if (vMode === "bottom") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { y: ref.y + ref.cy - sel[i].cy });
+      }
+    } else if (vMode === "space") {
+      if (sel.length >= 3) {
+        const sorted = [...sel].sort((a, b) => a.y - b.y);
+        const totalH = sorted.reduce((s, c) => s + c.cy, 0);
+        const minY = sorted[0].y;
+        const maxY = sorted[sorted.length - 1].y + sorted[sorted.length - 1].cy;
+        const space = Math.round((maxY - minY - totalH) / (sel.length - 1));
+        let curY = minY;
+        for (const c of sorted) {
+          project.moveResizeControl(c, { y: curY });
+          curY += c.cy + space;
+        }
+      }
+    } else if (vMode === "dialog") {
+      for (let i = 1; i < sel.length; i++) {
+        project.moveResizeControl(sel[i], { y: Math.round((dialog.cy - sel[i].cy) / 2) });
+      }
     }
 
     const after = sel.map((c) => ({ c, x: c.x, y: c.y, cx: c.cx, cy: c.cy }));
@@ -82,15 +139,6 @@ export function openAlignDialog(wm, selection, dialog, project, repaint) {
   win.content.innerHTML = "";
   win.content.appendChild(root);
 }
-
-/**
- * Open the Size dialog.
- * @param {import("../ui/window-manager.js").WindowManager} wm
- * @param {Set<object>} selection
- * @param {object} dialog
- * @param {import("../core/project-model.js").ProjectModel} project
- * @param {()=>void} repaint
- */
 export function openSizeDialog(wm, selection, dialog, project, repaint) {
   const winId = "size-dialog";
   if (wm.windows.has(winId)) wm.close(winId);
