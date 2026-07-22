@@ -699,6 +699,7 @@ export function openTestDialog(wm, project, dialog) {
         el.addEventListener("mousedown", () => el.classList.add("btn-pressed"));
         el.addEventListener("mouseup", () => el.classList.remove("btn-pressed"));
         el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
+        el.addEventListener("mouseenter", (e) => { if (e.buttons & 1) el.classList.add("btn-pressed"); });
       } else {
         el.contentEditable = "true";
       }
