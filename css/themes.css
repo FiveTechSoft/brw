@@ -298,7 +298,6 @@
 /* Windows 11 — Mica desktop with bloom */
 [data-theme="win11"] #desktop {
   background: linear-gradient(160deg, #001b4f 0%, #003399 30%, #0078d4 50%, #60cdff 70%, #c4e0f9 100%);
-  position: relative;
 }
 [data-theme="win11"] #desktop::before {
   content: '';
@@ -311,7 +310,6 @@
 
 /* Windows 11 — Mica window chrome */
 [data-theme="win11"] .mdi-window {
-  position: relative;
   z-index: 1;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 8px;
