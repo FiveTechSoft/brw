@@ -650,8 +650,12 @@ export function openTestDialog(wm, project, dialog) {
           closeTestDialog();
         }
       });
+      // Visual press feedback for buttons
       if (!/EDIT/i.test(String(ctl.className))) {
         el.setAttribute("role", "button");
+        el.addEventListener("mousedown", () => el.classList.add("btn-pressed"));
+        el.addEventListener("mouseup", () => el.classList.remove("btn-pressed"));
+        el.addEventListener("mouseleave", () => el.classList.remove("btn-pressed"));
       } else {
         el.contentEditable = "true";
       }
