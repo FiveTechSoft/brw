@@ -20,7 +20,7 @@ export function openStringTableEditor(wm, project, resource) {
 
   const root = document.createElement("div");
   root.className = "stringtable-editor";
-  root.innerHTML = \`
+  root.innerHTML = `
     <div style="padding:4px;display:flex;flex-direction:column;height:100%;gap:4px;">
       <div style="display:flex;gap:4px;align-items:center;">
         <span style="font-weight:bold;font-size:11px">ID</span>
@@ -33,7 +33,7 @@ export function openStringTableEditor(wm, project, resource) {
         <button type="button" class="win-btn st-cancel">Cancel</button>
       </div>
     </div>
-  \`;
+  `;
 
   const rowsEl = root.querySelector(".st-rows");
   const entries = parseStringTable(resource.rawText || "");
@@ -43,11 +43,11 @@ export function openStringTableEditor(wm, project, resource) {
     for (let i = 0; i < entries.length; i++) {
       const row = document.createElement("div");
       row.style.cssText = "display:flex;gap:4px;padding:2px 0;border-bottom:1px solid var(--shadow);";
-      row.innerHTML = \`
-        <input type="text" class="st-id" value="\${entries[i].id}" style="width:120px;font-size:11px" />
-        <input type="text" class="st-val" value="\${entries[i].value}" style="flex:1;font-size:11px" />
+      row.innerHTML = `
+        <input type="text" class="st-id" value="${entries[i].id}" style="width:120px;font-size:11px" />
+        <input type="text" class="st-val" value="${entries[i].value}" style="flex:1;font-size:11px" />
         <button type="button" class="win-btn st-del" style="min-width:30px;padding:0 6px;">X</button>
-      \`;
+      `;
       row.querySelector(".st-del").onclick = () => { entries.splice(i, 1); render(); };
       row.querySelector(".st-id").onchange = (e) => { entries[i].id = e.target.value; };
       row.querySelector(".st-val").onchange = (e) => { entries[i].value = e.target.value; };

@@ -48,11 +48,11 @@ export function openVersionInfoEditor(wm, project, resource) {
     for (let i = 0; i < data.strings.length; i++) {
       const row = document.createElement("div");
       row.style.cssText = "display:flex;gap:4px;padding:2px 0;border-bottom:1px solid var(--shadow);";
-      row.innerHTML = \`
-        <input type="text" class="vi-sk" value="\${data.strings[i].key}" style="width:160px;font-size:11px" placeholder="Key" />
-        <input type="text" class="vi-sv" value="\${data.strings[i].val}" style="flex:1;font-size:11px" placeholder="Value" />
+      row.innerHTML = `
+        <input type="text" class="vi-sk" value="${data.strings[i].key}" style="width:160px;font-size:11px" placeholder="Key" />
+        <input type="text" class="vi-sv" value="${data.strings[i].val}" style="flex:1;font-size:11px" placeholder="Value" />
         <button type="button" class="win-btn vi-del" style="min-width:30px;padding:0 6px;">X</button>
-      \`;
+      `;
       row.querySelector(".vi-del").onclick = () => { data.strings.splice(i, 1); renderStrings(); };
       row.querySelector(".vi-sk").onchange = (e) => { data.strings[i].key = e.target.value; };
       row.querySelector(".vi-sv").onchange = (e) => { data.strings[i].val = e.target.value; };
