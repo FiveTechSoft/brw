@@ -152,7 +152,7 @@
 }
 
 [data-theme="macos"] .mdi-resize {
-  display: none;
+  display: block;
 }
 
 [data-theme="macos"] .task-btn {
