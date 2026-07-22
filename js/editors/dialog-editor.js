@@ -5,6 +5,7 @@ import { WS, STD_ID } from "../core/constants.js";
 import { defaultControl } from "../core/project-model.js";
 import { renderDialog, duToPx, pxToDu, fontMetrics } from "./dialog-renderer.js";
 import { openStyleDialog } from "./dialog-styles.js";
+import { openRcTextViewer } from "../ui/rc-text-viewer.js";
 
 /**
  * @param {import('../ui/window-manager.js').WindowManager} wm
@@ -56,6 +57,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
     ["test", "Test"],
     ["dup", "Duplicate"],
     ["undo", "Undo"],
+    ["viewrc", "View RC"],
   ];
   /** @type {Record<string, HTMLButtonElement>} */
   const toolBtns = {};
@@ -97,6 +99,7 @@ export function openDialogEditor(wm, project, dialog, opts = {}) {
   toolBtns.group.onclick = () => setTool("group");
   toolBtns.order.onclick = () => setTool("order");
   toolBtns.test.onclick = () => openTestDialog(wm, project, dialog);
+  toolBtns.viewrc.onclick = () => openRcTextViewer(wm, project);
   toolBtns.dup.onclick = () => duplicateSelection();
   toolBtns.undo.onclick = () => {
     if (project.undo.canUndo) project.undo.undo();

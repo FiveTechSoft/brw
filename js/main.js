@@ -13,6 +13,7 @@ import { openControlPalette } from "./editors/control-palette.js";
 import { openAlignPalette } from "./editors/align-palette.js";
 import { openPreferencesDialog } from "./ui/preferences-dialog.js";
 import { parseRc, applyParseToProject } from "./engine/rc-parser.js";
+import { openRcTextViewer } from "./ui/rc-text-viewer.js";
 import { compileRc, compileHeader } from "./engine/rc-compiler.js";
 import { readRes } from "./engine/res-reader.js";
 import { writeRes } from "./engine/res-writer.js";
@@ -354,6 +355,11 @@ function onAbout() {
   );
 }
 
+function onViewRc() {
+  openRcTextViewer(wm, project);
+  setStatus("Ready", "RC Text viewer opened");
+}
+
 function onPreferences() {
   openPreferencesDialog(wm, project, {
     speedBarMode: speedBarMode,
@@ -573,6 +579,9 @@ window.addEventListener("keydown", (ev) => {
 setAppTitle();
 window.__brw = { project, wm, loadProjectFiles, openResource };
 console.log("Borland Resource Workshop boot complete");
+
+
+
 
 
 
