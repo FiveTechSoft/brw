@@ -15,12 +15,207 @@
 [data-theme="macos"] {
   --face: #ececec;
   --highlight: #ffffff;
-  --shadow: #b0b0b0;
-  --dkshadow: #888888;
-  --active-caption: #dcdcdc;
-  --caption-text: #000000;
+  --shadow: #c8c8c8;
+  --dkshadow: #aaaaaa;
+  --active-caption: #e8e8e8;
+  --caption-text: #333333;
   --desktop: #87ceeb;
   --window: #ffffff;
+}
+
+/* macOS window chrome */
+[data-theme="macos"] .mdi-window {
+  border: none;
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.1);
+  overflow: visible;
+}
+
+[data-theme="macos"] .mdi-titlebar {
+  background: linear-gradient(180deg, #e8e8e8 0%, #d6d6d6 50%, #c8c8c8 100%);
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #b0b0b0;
+  color: #333;
+}
+
+[data-theme="macos"] .mdi-window.focused .mdi-titlebar {
+  background: linear-gradient(180deg, #d6d6d6 0%, #c4c4c4 100%);
+  color: #000;
+}
+
+[data-theme="macos"] .mdi-title {
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  color: #555;
+  line-height: 22px;
+}
+
+[data-theme="macos"] .mdi-window.focused .mdi-title {
+  color: #000;
+}
+
+[data-theme="macos"] .mdi-sysbtns {
+  order: -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 0 0;
+}
+
+[data-theme="macos"] .mdi-sysbtns button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.1s;
+}
+
+[data-theme="macos"] .mdi-sysbtns button:active {
+  padding: 0;
+  box-shadow: none;
+}
+
+[data-theme="macos"] .mdi-sysbtns button[data-act="close"] {
+  background: #fc5753;
+  border: 1px solid #e04541;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="close"]:hover {
+  background: #fc7a77;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="close"]:active {
+  background: #e04541;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="close"]::before {
+  content: "";
+  position: absolute;
+  width: 6px; height: 1px;
+  background: transparent;
+  border-radius: 1px;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="close"]:hover::before {
+  background: #450000;
+}
+
+[data-theme="macos"] .mdi-sysbtns button[data-act="min"] {
+  background: #fdbc40;
+  border: 1px solid #e1a233;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="min"]:hover {
+  background: #fdcc66;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="min"]:active {
+  background: #e1a233;
+}
+
+[data-theme="macos"] .mdi-sysbtns button[data-act="max"] {
+  background: #33c748;
+  border: 1px solid #2aaa3a;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="max"]:hover {
+  background: #5dd46c;
+}
+[data-theme="macos"] .mdi-sysbtns button[data-act="max"]:active {
+  background: #2aaa3a;
+}
+
+[data-theme="macos"] .mdi-sysbtns button:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+[data-theme="macos"] .mdi-content {
+  border-top: none;
+  background: var(--face);
+  border-radius: 0 0 4px 4px;
+}
+
+[data-theme="macos"] .mdi-resize {
+  display: none;
+}
+
+[data-theme="macos"] .task-btn {
+  background: #e8e8e8;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: none;
+  font-size: 11px;
+}
+[data-theme="macos"] .task-btn:active,
+[data-theme="macos"] .task-btn.active {
+  background: #d0d0d0;
+  border-color: #aaa;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+[data-theme="macos"] .win-btn {
+  border-radius: 4px;
+  background: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
+  border: 1px solid #b0b0b0;
+  box-shadow: none;
+  min-height: 21px;
+}
+[data-theme="macos"] .win-btn:active {
+  background: linear-gradient(180deg, #d0d0d0 0%, #c0c0c0 100%);
+  border-color: #909090;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+  padding: 2px 8px;
+}
+
+/* macOS speedbar */
+[data-theme="macos"] .speedbar-btn {
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 2px;
+}
+[data-theme="macos"] .speedbar-btn:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.1);
+}
+[data-theme="macos"] .speedbar-btn:active {
+  background: rgba(0,0,0,0.1);
+}
+
+/* macOS menubar */
+[data-theme="macos"] .menubar {
+  background: linear-gradient(180deg, #e8e8e8 0%, #d6d6d6 100%);
+  border-bottom: 1px solid #b0b0b0;
+}
+[data-theme="macos"] .menu-top {
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 1px;
+}
+[data-theme="macos"] .menu-top.open,
+[data-theme="macos"] .menu-top:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+/* macOS title bar buttons icon hover */
+[data-theme="macos"] .mdi-sysbtns button {
+  position: relative;
 }
 
 [data-theme="win11"] {
@@ -32,4 +227,60 @@
   --caption-text: #000000;
   --desktop: #7a5dc7;
   --window: #ffffff;
+}
+
+/* Windows 11 window chrome */
+[data-theme="win11"] .mdi-window {
+  border-radius: 8px;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+[data-theme="win11"] .mdi-titlebar {
+  background: #fff;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #000;
+}
+
+[data-theme="win11"] .mdi-sysbtns button {
+  width: 46px;
+  height: 32px;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 10px;
+  color: #666;
+}
+[data-theme="win11"] .mdi-sysbtns button:hover {
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="win11"] .mdi-sysbtns button:active {
+  background: rgba(0,0,0,0.08);
+  box-shadow: none;
+  padding: 0;
+}
+
+[data-theme="win11"] .mdi-content {
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+[data-theme="win11"] .win-btn {
+  border-radius: 4px;
+  border: 1px solid #c0c0c0;
+  background: #fff;
+  box-shadow: none;
+  min-height: 28px;
+  padding: 4px 16px;
+  font-size: 12px;
+}
+[data-theme="win11"] .win-btn:active {
+  background: #e8e8e8;
+  box-shadow: none;
+  padding: 4px 16px;
 }
