@@ -675,9 +675,7 @@
 
 /* Test dialog */
 .test-dialog-host {
-  padding: 12px;
-  background: #808080;
-  min-height: 100%;
+  /* no background/padding — dialog floats freely */
 }
 .test-focusable:focus {
   outline: 1px dotted #000;
